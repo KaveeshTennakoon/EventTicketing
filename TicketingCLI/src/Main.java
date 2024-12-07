@@ -140,7 +140,7 @@ public class Main {
     // creating a json file to save the configuration information
     private static void saveConfig(Configuration config) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter("configuration.json")) {
+        try (FileWriter writer = new FileWriter("files/configuration.json")) {
             gson.toJson(config, writer);
             logger.info("Configuration saved to configuration.json.");
         } catch (IOException e) {
@@ -149,7 +149,6 @@ public class Main {
 
     }
 
-    // validating to be the input greater than 0 and ensure it is an integer
     private static int validateConfig(String message) {
         Scanner scanner = new Scanner(System.in);
         int value;
@@ -172,7 +171,7 @@ public class Main {
 
     private static void configureLogger() {
         try {
-            FileHandler fileHandler = new FileHandler("application.log", true);
+            FileHandler fileHandler = new FileHandler("files/application.log", true);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch (IOException e) {
