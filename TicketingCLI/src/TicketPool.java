@@ -27,7 +27,7 @@ public class TicketPool {
                 System.out.println("Vendor-" + vendorId + " failed to add a ticket to the pool. Ticket pool is full");
             }
         } else {
-            System.out.println("Vendor-" + vendorId + " failed to add a ticket to the pool. All the available tickets tickets are added to the pool");
+            System.out.println("Vendor-" + vendorId + " failed to add a ticket to the pool. All the available tickets are added to the pool");
         }
     }
 
