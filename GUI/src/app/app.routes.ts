@@ -3,6 +3,7 @@ import { LauyoutComponent } from './pages/lauyout/lauyout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { VendorLoginComponent } from './pages/vendor-login/vendor-login.component';
 import { VendorRegisterComponent } from './pages/vendor-register/vendor-register.component';
+import { AuthGuard } from './auth/guard/auth.guard';
 
 export const routes: Routes = [
     {
@@ -24,6 +25,7 @@ export const routes: Routes = [
         children: [
             {
                 path: 'dashboard',
+                canActivate: [AuthGuard],
                 component: DashboardComponent
             }
         ]
