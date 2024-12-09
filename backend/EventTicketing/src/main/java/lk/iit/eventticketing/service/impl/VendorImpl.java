@@ -54,7 +54,7 @@ public class VendorImpl implements VendorService {
             boolean isPasswordCorrect = passwordEncoder.matches(password, vendor.getVendorPassword());
 
             if (isPasswordCorrect) {
-                String token = jwtUtil.generateToken(email);
+                String token = jwtUtil.generateToken(email, "VENDOR");
                 return new LoginRespose("Login successful", true, token);
             } else {
                 return new LoginRespose("Password is incorrect", false, null);

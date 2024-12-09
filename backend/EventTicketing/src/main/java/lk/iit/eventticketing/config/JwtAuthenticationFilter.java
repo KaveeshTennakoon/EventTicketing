@@ -29,24 +29,51 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String email = null;
         String jwt = null;
+        String userType = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             email = jwtUtil.extractEmail(jwt);
+            userType = jwtUtil.extractUserType(jwt);
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtUtil.validateToken(jwt, email)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
+                // Check authorization based on user type and request path
+                if (isAuthorized(request.getRequestURI(), userType)) {
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
 
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    usernamePasswordAuthenticationToken
+                            .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                } else {
+                    // If not authorized, send forbidden error
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                    return;
+                }
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isAuthorized(String path, String userType) {
+        // If no user type is present, deny access
+        if (userType == null) {
+            return false;
+        }
+
+        // Check if the path matches the user type
+        if (path.contains("/customer/") && !userType.equals("CUSTOMER")) {
+            return false;
+        }
+
+        if (path.contains("/vendor/") && !userType.equals("VENDOR")) {
+            return false;
+        }
+
+        return true;
     }
 }

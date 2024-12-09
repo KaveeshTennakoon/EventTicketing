@@ -12,11 +12,5 @@ import { Router } from '@angular/router';
 })
 export class VendorHomeComponent {
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/VendorLogin']);
-  }
 
 }

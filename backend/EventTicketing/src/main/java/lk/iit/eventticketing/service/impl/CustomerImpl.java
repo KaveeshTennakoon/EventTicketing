@@ -51,7 +51,7 @@ public class CustomerImpl implements CustomerService {
             boolean isPasswordCorrect = passwordEncoder.matches(password, customer.getCustomerPassword());
 
             if (isPasswordCorrect) {
-                String token = jwtUtil.generateToken(email);
+                String token = jwtUtil.generateToken(email, "CUSTOMER");
                 return new LoginRespose("Login successful", true, token);
             } else {
                 return new LoginRespose("Password is incorrect", false, null);

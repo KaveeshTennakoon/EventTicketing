@@ -34,7 +34,7 @@ export class VendorLoginComponent {
         next: (response) => {
           if (response.status && response.token) {
             // Store the token
-            this.authService.setToken(response.token);
+            this.authService.setToken(response.token, 'VENDOR');
             
             // Navigate to dashboard
             this.router.navigate(['/vendor/home']);

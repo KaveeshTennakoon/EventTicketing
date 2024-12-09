@@ -21,12 +21,16 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot, 
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.authService.isLoggedIn()) {
+    // Check if logged in and match the required user type
+    const requiredUserType = route.data['userType'];
+    
+    if (this.authService.isLoggedIn(requiredUserType)) {
       return true;
     }
 
-    // Redirect to login page
-    this.router.navigate(['/vendor-login'], {
+    // Redirect to appropriate login page based on user type
+    const loginRoute = requiredUserType === 'VENDOR' ? '/VendorLogin' : '/CustomerLogin';
+    this.router.navigate([loginRoute], {
       queryParams: { returnUrl: state.url }
     });
     return false;

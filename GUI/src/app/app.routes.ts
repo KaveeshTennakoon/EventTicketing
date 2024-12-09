@@ -38,7 +38,8 @@ export const routes: Routes = [
             {
                 path: 'home',
                 canActivate: [AuthGuard],
-                component: VendorHomeComponent
+                component: VendorHomeComponent,
+                data: { userType: 'VENDOR' }
             },
         ]
     },
@@ -49,7 +50,8 @@ export const routes: Routes = [
             {
                 path: 'home',
                 canActivate: [AuthGuard],
-                component: CustomerHomeComponent
+                component: CustomerHomeComponent,
+                data: { userType: 'CUSTOMER' }
             },
         ]
     }
