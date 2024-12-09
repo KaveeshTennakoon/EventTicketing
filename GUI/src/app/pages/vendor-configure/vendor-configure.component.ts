@@ -5,13 +5,13 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/service/auth.service';
 
 @Component({
-  selector: 'app-vendor-home',
+  selector: 'app-vendor-configure',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './vendor-home.component.html',
-  styleUrls: ['./vendor-home.component.css']
+  templateUrl: './vendor-configure.component.html',
+  styleUrls: ['./vendor-configure.component.css']
 })
-export class VendorHomeComponent {
+export class VendorConfigureComponent {
 
   eventName: string = '';
   ticketPrice: number = 1;
@@ -23,7 +23,6 @@ export class VendorHomeComponent {
 
 
   constructor(private http: HttpClient ,private authService: AuthService) {}
-
 
   createTicketPool() {
 

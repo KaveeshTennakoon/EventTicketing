@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { VendorHomeComponent } from "../vendor-home/vendor-home.component";
+import { VendorConfigureComponent } from "../vendor-configure/vendor-configure.component";
 import { AuthService } from '../../auth/service/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vendor-layout',
   standalone: true,
-  imports: [VendorHomeComponent],
+  imports: [VendorConfigureComponent],
   templateUrl: './vendor-layout.component.html',
   styleUrl: './vendor-layout.component.css'
 })

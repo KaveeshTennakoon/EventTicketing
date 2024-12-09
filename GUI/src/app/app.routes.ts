@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { VendorLoginComponent } from './pages/vendor-login/vendor-login.component';
 import { VendorRegisterComponent } from './pages/vendor-register/vendor-register.component';
 import { AuthGuard } from './auth/guard/auth.guard';
-import { VendorHomeComponent } from './pages/vendor-home/vendor-home.component';
+import { VendorConfigureComponent } from './pages/vendor-configure/vendor-configure.component';
 import { CustomerHomeComponent } from './pages/customer-home/customer-home.component';
 import { CustomerRegisterComponent } from './pages/customer-register/customer-register.component';
 import { CustomerLoginComponent } from './pages/customer-login/customer-login.component';
@@ -38,7 +38,7 @@ export const routes: Routes = [
             {
                 path: 'home',
                 canActivate: [AuthGuard],
-                component: VendorHomeComponent,
+                component: VendorConfigureComponent,
                 data: { userType: 'VENDOR' }
             },
         ]
