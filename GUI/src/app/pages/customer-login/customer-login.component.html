@@ -7,15 +7,15 @@
         <!-- Right Card: Login -->
         <div class="card p-4" style="flex: 1;">
           <div class="card-body">
-            <h1>Vendor Login</h1>
-            <p class="text-muted ml-2">Log in to your vendor account</p>
-            <form #loginForm="ngForm" (ngSubmit)="VendorLogin()">
+            <h1>Customer Login</h1>
+            <p class="text-muted ml-2">Log in to your customer account</p>
+            <form #loginForm="ngForm" (ngSubmit)="CustomerLogin()">
               <!-- Email -->
               <div class="mb-3">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-envelope mr-1 mt-1" style="font-size:24px"></i></span>
                   <input 
-                    [(ngModel)]="vendoremail" 
+                    [(ngModel)]="customeremail" 
                     type="email" 
                     name="VendorEmail" 
                     class="form-control" 
@@ -35,7 +35,7 @@
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-lock mr-1 mt-1" style="font-size:34px"></i></span>
                   <input 
-                    [(ngModel)]="vendorpassword" 
+                    [(ngModel)]="customerpassword" 
                     type="password" 
                     name="VendorPassword" 
                     class="form-control" 
@@ -63,20 +63,20 @@
           </div>
         </div>
         <!-- Right Card-->
-        <div class="card text-white bg-primary py-3 d-md-down-none" style="width:44%; margin-right: 2%;">
+        <div class="card text-white bg-danger py-3 d-md-down-none" style="width:44%; margin-right: 2%;">
           <div class="card-body text-center">
             <div>
-              <h4>New Vendor</h4>
-              <button (click)="goToVendorRegister()" type="button" class="btn btn-danger active ">Register Now!</button>
+              <h4>New Customer</h4>
+              <button (click)="goToCustomerRegister()" type="button" class="btn btn-primary active ">Register Now!</button>
             </div>
             <div class="mt-5">
-              <h2>Customer</h2>
+              <h2>Vendor</h2>
               <div>
-                <button  (click)="goToCustomerLogin()" type="button" class="btn btn-danger active px-4">Login</button>
+                <button  (click)="goToVendorLogin()" type="button" class="btn btn-primary active px-4">Login</button>
               </div>
               <div>
                 
-                <button (click)="goToCustomerRegister()" type="button" class="btn btn-danger active mt-2 px-4">Signup</button>
+                <button (click)="goToVendorRegister()" type="button" class="btn btn-primary active mt-2 px-4">Signup</button>
               </div>
             </div>
           </div>

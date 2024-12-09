@@ -5,38 +5,39 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-vendor-register',
+  selector: 'app-customer-register',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './vendor-register.component.html',
-  styleUrls: ['./vendor-register.component.css'],
+  templateUrl: './customer-register.component.html',
+  styleUrl: './customer-register.component.css'
 })
-export class VendorRegisterComponent {
-  vendorname: string = '';
-  vendoremail: string = '';
-  vendorpassword: string = '';
+export class CustomerRegisterComponent {
+
+  customername: string = '';
+  customeremail: string = '';
+  customerpassword: string = '';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   errorMessage: string = '';
 
-  VendorSave(registerForm: any) {
+  CustomerSave(registerForm: any) {
     if (registerForm.invalid) {
       return;
     }
 
     let bodyData = {
-      vendorName: this.vendorname,
-      vendorEmail: this.vendoremail,
-      vendorPassword: this.vendorpassword,
+      customerName: this.customeremail,
+      customerEmail: this.customeremail,
+      customerPassword: this.customeremail,
     };
 
-    this.http.post("http://localhost:8080/vendor/save", bodyData, { responseType: 'text' })
+    this.http.post("http://localhost:8080/customer/save", bodyData, { responseType: 'text' })
       .subscribe(
         (resultData: any) => {
           console.log(resultData);
-          alert("Vendor registered successfully, Login again");
-          this.router.navigate(['/VendorLogin'])
+          alert("Customer registered successfully, Login again");
+          this.router.navigate(['/CustomerLogin'])
         },
         (error) => {
           console.error("Error occurred during registration", error);
@@ -46,16 +47,15 @@ export class VendorRegisterComponent {
 
   }
 
-  goToVendorLogin() {
-    this.router.navigate(['/VendorLogin'])
+  goToVendorRegister() {
+    this.router.navigate(['/VendorRegister']);
   }
 
   goToCustomerLogin() {
     this.router.navigate(['/CustomerLogin']);
   }
 
-  goToCustomerRegister() {
-    this.router.navigate(['/CustomerRegister']);
+  goToVendorLogin() {
+    this.router.navigate(['/VendorLogin']);
   }
-
 }

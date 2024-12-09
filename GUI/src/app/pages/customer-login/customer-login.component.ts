@@ -1,35 +1,35 @@
-import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/service/auth.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { LoginResponse } from '../../model/login-response.model';
 
 @Component({
-  selector: 'app-vendor-login',
+  selector: 'app-customer-login',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './vendor-login.component.html',
-  styleUrl: './vendor-login.component.css'
+  templateUrl: './customer-login.component.html',
+  styleUrl: './customer-login.component.css'
 })
-export class VendorLoginComponent {
+export class CustomerLoginComponent {
 
-  vendoremail: String = "";
-  vendorpassword: String = "";
+  customeremail: String = "";
+  customerpassword: String = "";
 
   constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
   
   errorMessage: string = '';
 
-  VendorLogin(){
+  CustomerLogin(){
 
     let bodyData = {
-      "email" : this.vendoremail,
-      "password" : this.vendorpassword
+      "email" : this.customeremail,
+      "password" : this.customerpassword
     };
 
-    this.http.post<LoginResponse>('http://localhost:8080/vendor/login', bodyData)
+    this.http.post<LoginResponse>('http://localhost:8080/customer/login', bodyData)
       .subscribe({
         next: (response) => {
           if (response.status && response.token) {
@@ -37,7 +37,7 @@ export class VendorLoginComponent {
             this.authService.setToken(response.token);
             
             // Navigate to dashboard
-            this.router.navigate(['/vendor/home']);
+            this.router.navigate(['/customer/home']);
           } else {
             // Handle login failure
             this.errorMessage = 'Login failed. ' + response.message;
@@ -54,12 +54,13 @@ export class VendorLoginComponent {
     this.router.navigate(['/VendorRegister']);
   }
 
-  goToCustomerLogin() {
-    this.router.navigate(['/CustomerLogin']);
+  goToVendorLogin() {
+    this.router.navigate(['/VendorLogin']);
   }
 
   goToCustomerRegister() {
     this.router.navigate(['/CustomerRegister']);
   }
+
 
 }

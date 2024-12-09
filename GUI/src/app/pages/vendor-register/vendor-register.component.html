@@ -6,7 +6,7 @@
         <div class="card p-4" style="flex: 1;">
           <div class="card-body">
             <h1 style="font-size: 34px;">Vendor Registration</h1>
-            <p class="text-muted">Register your account</p>
+            <p class="text-muted">Make your vendor account</p>
             <form #registerForm="ngForm" (ngSubmit)="VendorSave(registerForm)">
               <!-- Vendor Name -->
               <div class="mb-3">
@@ -92,11 +92,21 @@
         </div>
 
         <!-- Right Card -->
-        <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%; margin-right: 2%;">
+        <div class="card text-white bg-primary py-3 d-md-down-none" style="width:44%; margin-right: 2%;">
           <div class="card-body text-center">
             <div>
-              <h4>Have a Vendor Account</h4>
-              <button (click)="goToVendorLogin()" type="button" class="btn btn-danger active">Log In</button>
+              <h4>Login to Vendor</h4>
+              <button (click)="goToVendorLogin()" type="button" class="btn btn-danger active ">Login</button>
+            </div>
+            <div class="mt-5">
+              <h2>Customer</h2>
+              <div>
+                <button  (click)="goToCustomerLogin()" type="button" class="btn btn-danger active px-4">Login</button>
+              </div>
+              <div>
+                
+                <button (click)="goToCustomerRegister()" type="button" class="btn btn-danger active mt-2 px-4">Signup</button>
+              </div>
             </div>
           </div>
         </div>
