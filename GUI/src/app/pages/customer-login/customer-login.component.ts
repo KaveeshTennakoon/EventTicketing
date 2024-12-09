@@ -34,7 +34,7 @@ export class CustomerLoginComponent {
         next: (response) => {
           if (response.status && response.token) {
             // Store the token
-            this.authService.setToken(response.token, 'CUSTOMER');
+            this.authService.setToken(response.token, 'CUSTOMER', response.name);
             
             // Navigate to dashboard
             this.router.navigate(['/customer/home']);

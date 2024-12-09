@@ -1,7 +1,7 @@
 package lk.iit.eventticketing.service.impl;
 
 import lk.iit.eventticketing.dto.LoginDto;
-import lk.iit.eventticketing.response.LoginRespose;
+import lk.iit.eventticketing.response.LoginResponse;
 import lk.iit.eventticketing.service.VendorService;
 import lk.iit.eventticketing.dto.VendorDto;
 import lk.iit.eventticketing.model.Vendor;
@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lk.iit.eventticketing.util.JwtUtil;
-
-import java.util.Optional;
 
 
 @Service
@@ -42,7 +40,7 @@ public class VendorImpl implements VendorService {
     }
 
     @Override
-    public LoginRespose loginVendor(LoginDto loginDto) {
+    public LoginResponse loginVendor(LoginDto loginDto) {
         String email = loginDto.getEmail();
         String password = loginDto.getPassword();
 
@@ -55,15 +53,13 @@ public class VendorImpl implements VendorService {
 
             if (isPasswordCorrect) {
                 String token = jwtUtil.generateToken(email, "VENDOR");
-                return new LoginRespose("Login successful", true, token);
+                return new LoginResponse("Login successful", true, token, vendor.getVendorName());
             } else {
-                return new LoginRespose("Password is incorrect", false, null);
+                return new LoginResponse("Password is incorrect", false, null, null);
             }
         } else {
-            return new LoginRespose("Email is incorrect", false, null);
+            return new LoginResponse("Email is incorrect", false, null, null);
         }
     }
-
-
 
 }

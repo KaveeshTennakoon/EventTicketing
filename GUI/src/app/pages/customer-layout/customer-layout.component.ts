@@ -12,7 +12,11 @@ import { CustomerHomeComponent } from "../customer-home/customer-home.component"
 })
 export class CustomerLayoutComponent {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  customerName: string | null = null;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.customerName = this.authService.getName();
+  }
 
   logout(): void {
     this.authService.logout();

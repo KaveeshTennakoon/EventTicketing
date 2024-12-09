@@ -12,7 +12,11 @@ import { Router } from '@angular/router';
 })
 export class VendorLayoutComponent {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  vendorName: string | null = null;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.vendorName = this.authService.getName();
+  }
 
   logout(): void {
     this.authService.logout();

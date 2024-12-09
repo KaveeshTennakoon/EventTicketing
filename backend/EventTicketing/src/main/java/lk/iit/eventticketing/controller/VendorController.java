@@ -2,7 +2,7 @@ package lk.iit.eventticketing.controller;
 
 import lk.iit.eventticketing.dto.LoginDto;
 import lk.iit.eventticketing.dto.VendorDto;
-import lk.iit.eventticketing.response.LoginRespose;
+import lk.iit.eventticketing.response.LoginResponse;
 import lk.iit.eventticketing.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +23,9 @@ public class VendorController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<?> loginVendor(@RequestBody LoginDto loginDto){
-        LoginRespose loginRespose = vendorService.loginVendor(loginDto);
-        return ResponseEntity.ok(loginRespose);
+    public ResponseEntity<?> loginVendor(@RequestBody LoginDto loginDto) {
+        LoginResponse loginResponse = vendorService.loginVendor(loginDto);
+        return ResponseEntity.ok(loginResponse);
     }
-
 }
+

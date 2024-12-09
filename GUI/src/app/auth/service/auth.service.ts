@@ -10,11 +10,9 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userTypeKey = 'user_type';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private vendorNameKey = 'vendor_name';
 
-  constructor(
-    private router: Router,
-    private http: HttpClient
-  ) {
+  constructor( private router: Router, private http: HttpClient) {
     // Check if token exists on service initialization
     this.isAuthenticatedSubject.next(this.isLoggedIn());
   }
@@ -30,10 +28,13 @@ export class AuthService {
   }
 
   // Set token and user type after successful login
-  setToken(token: string, userType: string): void {
+  setToken(token: string, userType: string, vendorName?: string): void {
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userTypeKey, userType);
     this.isAuthenticatedSubject.next(true);
+    if (vendorName) {
+      localStorage.setItem(this.vendorNameKey, vendorName);
+    }
   }
 
   // Get current token
@@ -44,6 +45,10 @@ export class AuthService {
   // Get current user type
   getUserType(): string | null {
     return localStorage.getItem(this.userTypeKey);
+  }
+
+  getName(): string | null {
+    return localStorage.getItem(this.vendorNameKey);
   }
 
   // Check if user is logged in
@@ -70,7 +75,43 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userTypeKey);
+    localStorage.removeItem(this.vendorNameKey);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/VendorLogin']);
   }
 }
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class AuthService {
+//   private tokenKey = 'auth_token';
+//   private userTypeKey = 'user_type';
+//   private vendorNameKey = 'vendor_name'; // New key for vendor name
+
+//   constructor(private router: Router, private http: HttpClient) {}
+
+//   setToken(token: string, userType: string, vendorName?: string): void {
+//     localStorage.setItem(this.tokenKey, token);
+//     localStorage.setItem(this.userTypeKey, userType);
+
+//     if (vendorName) {
+//       localStorage.setItem(this.vendorNameKey, vendorName);
+//     }
+//   }
+
+//   getVendorName(): string | null {
+//     return localStorage.getItem(this.vendorNameKey);
+//   }
+
+//   clearAuthData(): void {
+//     localStorage.removeItem(this.tokenKey);
+//     localStorage.removeItem(this.userTypeKey);
+//     localStorage.removeItem(this.vendorNameKey);
+//   }
+
+//   logout(): void {
+//     this.clearAuthData();
+//     this.router.navigate(['/VendorLogin']);
+//   }
+// }

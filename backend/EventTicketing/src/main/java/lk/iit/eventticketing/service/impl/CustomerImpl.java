@@ -4,7 +4,7 @@ import lk.iit.eventticketing.dto.CustomerDto;
 import lk.iit.eventticketing.dto.LoginDto;
 import lk.iit.eventticketing.model.Customer;
 import lk.iit.eventticketing.repo.CustomerRepo;
-import lk.iit.eventticketing.response.LoginRespose;
+import lk.iit.eventticketing.response.LoginResponse;
 import lk.iit.eventticketing.service.CustomerService;
 import lk.iit.eventticketing.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class CustomerImpl implements CustomerService {
     }
 
     @Override
-    public LoginRespose loginCustomer(LoginDto loginDto) {
+    public LoginResponse loginCustomer(LoginDto loginDto) {
         String email = loginDto.getEmail();
         String password = loginDto.getPassword();
 
@@ -52,12 +52,12 @@ public class CustomerImpl implements CustomerService {
 
             if (isPasswordCorrect) {
                 String token = jwtUtil.generateToken(email, "CUSTOMER");
-                return new LoginRespose("Login successful", true, token);
+                return new LoginResponse("Login successful", true, token, customer.getCustomerName());
             } else {
-                return new LoginRespose("Password is incorrect", false, null);
+                return new LoginResponse("Password is incorrect", false, null, null);
             }
         } else {
-            return new LoginRespose("Email is incorrect", false, null);
+            return new LoginResponse("Email is incorrect", false, null, null);
         }
     }
 }

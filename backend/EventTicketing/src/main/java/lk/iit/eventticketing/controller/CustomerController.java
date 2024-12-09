@@ -2,7 +2,7 @@ package lk.iit.eventticketing.controller;
 
 import lk.iit.eventticketing.dto.CustomerDto;
 import lk.iit.eventticketing.dto.LoginDto;
-import lk.iit.eventticketing.response.LoginRespose;
+import lk.iit.eventticketing.response.LoginResponse;
 import lk.iit.eventticketing.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class CustomerController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<?> loginCustomer(@RequestBody LoginDto loginDto){
-        LoginRespose loginRespose = customerService.loginCustomer(loginDto);
-        return ResponseEntity.ok(loginRespose);
+        LoginResponse loginResponse = customerService.loginCustomer(loginDto);
+        return ResponseEntity.ok(loginResponse);
     }
 }

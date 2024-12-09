@@ -1,17 +1,19 @@
 package lk.iit.eventticketing.response;
 
-public class LoginRespose {
+public class LoginResponse {
 
     private String message;
     private Boolean status;
     private String token;
+    private String name;
 
-    public LoginRespose() {}
+    public LoginResponse() {}
 
-    public LoginRespose(String message, Boolean status, String token) {
+    public LoginResponse(String message, Boolean status, String token, String name) {
         this.message = message;
         this.status = status;
         this.token = token;
+        this.name = name;
     }
 
     public String getMessage() {
@@ -38,11 +40,21 @@ public class LoginRespose {
         this.token = token;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "LoginRespose{" +
+        return "LoginResponse{" +
                 "message='" + message + '\'' +
                 ", status=" + status +
+                ", token='" + token + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

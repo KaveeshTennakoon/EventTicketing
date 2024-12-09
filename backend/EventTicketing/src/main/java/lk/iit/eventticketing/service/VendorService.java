@@ -2,12 +2,12 @@ package lk.iit.eventticketing.service;
 
 import lk.iit.eventticketing.dto.LoginDto;
 import lk.iit.eventticketing.dto.VendorDto;
-import lk.iit.eventticketing.response.LoginRespose;
+import lk.iit.eventticketing.response.LoginResponse;
 
 public interface VendorService {
 
     String addVendor(VendorDto vendorDto);
 
-    LoginRespose loginVendor(LoginDto loginDto);
+    LoginResponse loginVendor(LoginDto loginDto);
 
 }
