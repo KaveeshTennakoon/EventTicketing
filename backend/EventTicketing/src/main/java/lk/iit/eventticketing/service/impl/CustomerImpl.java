@@ -52,12 +52,12 @@ public class CustomerImpl implements CustomerService {
 
             if (isPasswordCorrect) {
                 String token = jwtUtil.generateToken(email, "CUSTOMER");
-                return new LoginResponse("Login successful", true, token, customer.getCustomerName());
+                return new LoginResponse("Login successful", true, token, customer.getCustomerName(), customer.getCustomerID());
             } else {
-                return new LoginResponse("Password is incorrect", false, null, null);
+                return new LoginResponse("Password is incorrect", false, null, null, -1);
             }
         } else {
-            return new LoginResponse("Email is incorrect", false, null, null);
+            return new LoginResponse("Email is incorrect", false, null, null, -1);
         }
     }
 }

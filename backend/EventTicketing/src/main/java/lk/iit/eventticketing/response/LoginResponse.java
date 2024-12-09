@@ -6,14 +6,16 @@ public class LoginResponse {
     private Boolean status;
     private String token;
     private String name;
+    private long id;
 
     public LoginResponse() {}
 
-    public LoginResponse(String message, Boolean status, String token, String name) {
+    public LoginResponse(String message, Boolean status, String token, String name, long id) {
         this.message = message;
         this.status = status;
         this.token = token;
         this.name = name;
+        this.id = id;
     }
 
     public String getMessage() {
@@ -46,6 +48,14 @@ public class LoginResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override

@@ -53,12 +53,12 @@ public class VendorImpl implements VendorService {
 
             if (isPasswordCorrect) {
                 String token = jwtUtil.generateToken(email, "VENDOR");
-                return new LoginResponse("Login successful", true, token, vendor.getVendorName());
+                return new LoginResponse("Login successful", true, token, vendor.getVendorName(), vendor.getVendorID());
             } else {
-                return new LoginResponse("Password is incorrect", false, null, null);
+                return new LoginResponse("Password is incorrect", false, null, null, -1);
             }
         } else {
-            return new LoginResponse("Email is incorrect", false, null, null);
+            return new LoginResponse("Email is incorrect", false, null, null, -1);
         }
     }
 

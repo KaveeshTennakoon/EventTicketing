@@ -3,5 +3,6 @@ export interface LoginResponse {
     status: boolean;
     token?: string;
     name?: string;
+    id?: number;
     role: 'VENDOR' | 'CUSTOMER';
   }

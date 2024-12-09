@@ -10,7 +10,8 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userTypeKey = 'user_type';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  private vendorNameKey = 'vendor_name';
+  private nameKey = 'name';
+  private idKey = 'id';
 
   constructor( private router: Router, private http: HttpClient) {
     // Check if token exists on service initialization
@@ -28,12 +29,15 @@ export class AuthService {
   }
 
   // Set token and user type after successful login
-  setToken(token: string, userType: string, vendorName?: string): void {
+  setToken(token: string, userType: string, name?: string, id?: number | string): void {
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userTypeKey, userType);
     this.isAuthenticatedSubject.next(true);
-    if (vendorName) {
-      localStorage.setItem(this.vendorNameKey, vendorName);
+    if (name) {
+      localStorage.setItem(this.nameKey, name);
+    }
+    if (id !== undefined) {
+      localStorage.setItem(this.idKey, id.toString());
     }
   }
 
@@ -48,7 +52,12 @@ export class AuthService {
   }
 
   getName(): string | null {
-    return localStorage.getItem(this.vendorNameKey);
+    return localStorage.getItem(this.nameKey);
+  }
+
+  getId(): number | null {
+    const id = localStorage.getItem(this.idKey);
+    return id ? parseInt(id, 10) : null;
   }
 
   // Check if user is logged in
@@ -75,43 +84,9 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userTypeKey);
-    localStorage.removeItem(this.vendorNameKey);
+    localStorage.removeItem(this.nameKey);
+    localStorage.removeItem(this.idKey);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/VendorLogin']);
   }
 }
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AuthService {
-//   private tokenKey = 'auth_token';
-//   private userTypeKey = 'user_type';
-//   private vendorNameKey = 'vendor_name'; // New key for vendor name
-
-//   constructor(private router: Router, private http: HttpClient) {}
-
-//   setToken(token: string, userType: string, vendorName?: string): void {
-//     localStorage.setItem(this.tokenKey, token);
-//     localStorage.setItem(this.userTypeKey, userType);
-
-//     if (vendorName) {
-//       localStorage.setItem(this.vendorNameKey, vendorName);
-//     }
-//   }
-
-//   getVendorName(): string | null {
-//     return localStorage.getItem(this.vendorNameKey);
-//   }
-
-//   clearAuthData(): void {
-//     localStorage.removeItem(this.tokenKey);
-//     localStorage.removeItem(this.userTypeKey);
-//     localStorage.removeItem(this.vendorNameKey);
-//   }
-
-//   logout(): void {
-//     this.clearAuthData();
-//     this.router.navigate(['/VendorLogin']);
-//   }
-// }
