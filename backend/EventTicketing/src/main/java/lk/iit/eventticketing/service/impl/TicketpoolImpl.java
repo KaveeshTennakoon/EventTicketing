@@ -29,7 +29,7 @@ public class TicketpoolImpl implements TicketpoolService {
     @Autowired
     private TicketlogRepo ticketlogRepo;
 
-    private Map<Long, Future<?>> activeTicketAdditionTasks = new ConcurrentHashMap<>();
+    private Map<Long, CompletableFuture<Void>> activeTicketAdditionTasks = new ConcurrentHashMap<>();
 
     @Override
     public String createTicketpool(TicketpoolDto ticketpoolDto) {
@@ -92,6 +92,58 @@ public class TicketpoolImpl implements TicketpoolService {
 
         return true;
     }
+
+    @Override
+    @Transactional
+    public synchronized boolean startTicketAddition(TicketlogDto ticketlogDto) throws Exception {
+        Ticketpool ticketpool = ticketpoolRepo.findById(ticketlogDto.getEventId())
+                .orElseThrow(() -> new Exception("Ticket pool not found"));
+
+        // Check if a task is already running for this ticket pool
+        if (activeTicketAdditionTasks.containsKey(ticketpool.getTicketpoolId())) {
+            throw new Exception("Ticket addition already in progress for this pool");
+        }
+
+        // Create and start an async task for continuous ticket addition
+        CompletableFuture<Void> ticketAdditionTask = CompletableFuture.runAsync(() -> {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    // Add ticket
+                    addTicketToPool(ticketlogDto);
+
+                    // Sleep based on ticket release rate (converted to milliseconds)
+                    Thread.sleep((long) (ticketpool.getTicketReleaseRate() * 1000));
+
+                    // Stop if max tickets reached
+                    if (ticketpool.getTicketsAvailable() >= ticketpool.getTotalTickets()) {
+                        break;
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (Exception e) {
+                // Log or handle exception
+                e.printStackTrace();
+            }
+        });
+
+        activeTicketAdditionTasks.put(ticketpool.getTicketpoolId(), ticketAdditionTask);
+        return true;
+
+    }
+
+    @Override
+    @Transactional
+    public synchronized boolean stopTicketAddition(Long ticketPoolId) {
+        CompletableFuture<Void> task = activeTicketAdditionTasks.get(ticketPoolId);
+        if (task != null) {
+            task.cancel(true);
+            activeTicketAdditionTasks.remove(ticketPoolId);
+            return true;
+        }
+        return false;
+    }
+
 
 
 }

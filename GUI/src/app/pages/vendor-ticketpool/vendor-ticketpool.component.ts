@@ -11,14 +11,12 @@ import { AuthService } from '../../auth/service/auth.service';
   templateUrl: './vendor-ticketpool.component.html',
   styleUrl: './vendor-ticketpool.component.css'
 })
-export class VendorTicketpoolComponent implements OnInit{
-
+export class VendorTicketpoolComponent implements OnInit {
   ticketPools: any[] = [];
   errorMessage: string = '';
+  activeTicketAdditionPools: Set<number> = new Set();
 
-  constructor(private http: HttpClient, private authService: AuthService) {
-    console.log(this.loadTicketPools())
-  }
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadTicketPools();
@@ -27,33 +25,50 @@ export class VendorTicketpoolComponent implements OnInit{
   loadTicketPools(): void {
     this.http.get<any[]>('http://localhost:8080/ticketpool/all')
       .subscribe({
-        next: (data) => 
-          this.ticketPools = data,
-        error: (err) => 
-          this.errorMessage = 'Error fetching ticket pools!'
+        next: (data) => this.ticketPools = data,
+        error: (err) => this.errorMessage = 'Error fetching ticket pools!'
       });
   }
 
-  addTicketToPool(ticketPoolId: number): void {
-    console.log(ticketPoolId);
+  toggleTicketAddition(ticketPool: any): void {
+    if (this.activeTicketAdditionPools.has(ticketPool.ticketpoolId)) {
+      this.stopTicketAddition(ticketPool.ticketpoolId);
+    } else {
+      this.startTicketAddition(ticketPool);
+    }
+  }
 
+  startTicketAddition(ticketPool: any): void {
     const payload = {
-      eventId: ticketPoolId,
+      eventId: ticketPool.ticketpoolId,
       userName: this.authService.getName(),
       userId: this.authService.getId()
     };
   
-    this.http.post('http://localhost:8080/ticketpool/addtickets', payload)
+    this.http.post('http://localhost:8080/ticketpool/start-ticket-addition', payload)
       .subscribe({
         next: (response) => {
+          this.activeTicketAdditionPools.add(ticketPool.ticketpoolId);
           this.loadTicketPools();
-          alert('Ticket added successfully!');
         },
         error: (err) => {
-          this.errorMessage = err.error.error || 'Error adding ticket';
+          this.errorMessage = err.error.error || 'Error starting ticket addition';
           console.log(err);
         }
       });
   }
 
+  stopTicketAddition(ticketPoolId: number): void {
+    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-addition/${ticketPoolId}`, {})
+      .subscribe({
+        next: (response) => {
+          this.activeTicketAdditionPools.delete(ticketPoolId);
+          this.loadTicketPools();
+        },
+        error: (err) => {
+          this.errorMessage = err.error.error || 'Error stopping ticket addition';
+          console.log(err);
+        }
+      });
+  }
 }

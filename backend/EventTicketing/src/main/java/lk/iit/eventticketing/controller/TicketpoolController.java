@@ -43,4 +43,26 @@ public class TicketpoolController {
         }
     }
 
+    @PostMapping("/start-ticket-addition")
+    public ResponseEntity<?> startTicketAddition(@RequestBody TicketlogDto ticketlogDto) {
+        try {
+            boolean started = ticketpoolService.startTicketAddition(ticketlogDto);
+            return ResponseEntity.ok().body(Map.of("message", "Ticket addition started successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/stop-ticket-addition/{ticketPoolId}")
+    public ResponseEntity<?> stopTicketAddition(@PathVariable Long ticketPoolId) {
+        try {
+            boolean stopped = ticketpoolService.stopTicketAddition(ticketPoolId);
+            return ResponseEntity.ok().body(Map.of("message", "Ticket addition stopped successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+
+
 }
