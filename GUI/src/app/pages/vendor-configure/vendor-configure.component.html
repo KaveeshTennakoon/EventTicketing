@@ -1,0 +1,145 @@
+<div class="container-fluid justify-content-center d-flex mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h1 class="mb-4">Create TicketPool</h1>
+            <form #ticketPoolForm="ngForm" (ngSubmit)="createTicketPool()">
+
+                <div class="mb-3">
+                    <label class="form-label">Event Name</label>
+                    <input 
+                        [(ngModel)]="eventName" 
+                        name="eventName"
+                        type="text" 
+                        class="form-control" 
+                        required
+                        #eventNameInput="ngModel">
+                    <div *ngIf="eventNameInput.invalid && eventNameInput.touched" class="text-danger">
+                        Event name is required.
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Ticket Price</label>
+                            <input 
+                                [(ngModel)]="ticketPrice" 
+                                name="ticketPrice"
+                                type="number" 
+                                min="0" 
+                                class="form-control" 
+                                required 
+                                step="0.01"
+                                #ticketPriceInput="ngModel">
+                            <div *ngIf="ticketPriceInput.invalid && ticketPriceInput.touched" class="text-danger">
+                                Ticket price must be a positive number.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Event Date</label>
+                            <input 
+                                [(ngModel)]="eventDate" 
+                                name="eventDate"
+                                type="date" 
+                                class="form-control" 
+                                required 
+                                #eventDateInput="ngModel">
+                            <div *ngIf="eventDateInput.invalid && eventDateInput.touched" class="text-danger">
+                                Event date is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Total Tickets</label>
+                            <input 
+                                [(ngModel)]="totalTickets" 
+                                name="totalTickets"
+                                type="number" 
+                                min="10" 
+                                step="1" 
+                                class="form-control" 
+                                required 
+                                #totalTicketsInput="ngModel">
+                            <div *ngIf="totalTicketsInput.invalid && totalTicketsInput.touched" class="text-danger">
+                                Total tickets must be at least 10 and an integer.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Ticketpool (maximum ticket capacity)</label>
+                            <input 
+                                [(ngModel)]="ticketpool" 
+                                name="ticketpool"
+                                type="number" 
+                                min="1" 
+                                step="1" 
+                                class="form-control" 
+                                required 
+                                #ticketpoolInput="ngModel">
+                            <div *ngIf="ticketpoolInput.invalid && ticketpoolInput.touched" class="text-danger">
+                                Ticketpool must be at least 1 and an integer.
+                            </div>
+                            <div *ngIf="ticketpool > totalTickets && ticketpoolInput.touched" class="text-danger">
+                                Ticketpool cannot be greater than total tickets.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Ticket Release Rate (s)</label>
+                            <input 
+                                [(ngModel)]="ticketReleaseRate" 
+                                name="ticketReleaseRate"
+                                type="number" 
+                                min="1" 
+                                class="form-control" 
+                                required 
+                                #ticketReleaseRateInput="ngModel">
+                            <div *ngIf="ticketReleaseRateInput.invalid && ticketReleaseRateInput.touched" class="text-danger">
+                                Ticket release rate must be at least 1 second.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label">Customer Retrieval Rate (s)</label>
+                            <input 
+                                [(ngModel)]="customerRetrievalRate" 
+                                name="customerRetrievalRate"
+                                type="number" 
+                                min="1" 
+                                class="form-control" 
+                                required 
+                                #customerRetrievalRateInput="ngModel">
+                            <div *ngIf="customerRetrievalRateInput.invalid && customerRetrievalRateInput.touched" class="text-danger">
+                                Retrieval rate must be at least 1 second.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary" 
+                        [disabled]="ticketPoolForm.invalid || ticketpool > totalTickets">
+                        Create TicketPool
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

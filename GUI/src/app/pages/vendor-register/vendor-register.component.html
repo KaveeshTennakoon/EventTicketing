@@ -1,0 +1,117 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="d-flex">
+        <!-- Registration Form -->
+        <div class="card p-4" style="flex: 1;">
+          <div class="card-body">
+            <h1 style="font-size: 34px;">Vendor Registration</h1>
+            <p class="text-muted">Make your vendor account</p>
+            <form #registerForm="ngForm" (ngSubmit)="VendorSave(registerForm)">
+              <!-- Vendor Name -->
+              <div class="mb-3">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-user mr-1 mt-1" style="font-size:32px"></i>
+                  </span>
+                  <input 
+                    [(ngModel)]="vendorname"
+                    type="text"
+                    name="VendorName"
+                    class="form-control"
+                    placeholder="Name"
+                    required
+                    minlength="2"
+                    #nameField="ngModel">
+                </div>
+                <div *ngIf="nameField.invalid && nameField.touched" class="text-danger small mt-1">
+                  <span *ngIf="nameField.errors?.['required']">Name is required.</span>
+                  <span *ngIf="nameField.errors?.['minlength']">Name must be at least 2 characters long.</span>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-envelope mr-1 mt-1" style="font-size:24px"></i>
+                  </span>
+                  <input 
+                    [(ngModel)]="vendoremail"
+                    type="email"
+                    name="VendorEmail"
+                    class="form-control"
+                    placeholder="Email"
+                    required
+                    email
+                    #emailField="ngModel">
+                </div>
+                <div *ngIf="emailField.invalid && emailField.touched" class="text-danger small mt-1">
+                  <span *ngIf="emailField.errors?.['required']">Email is required.</span>
+                  <span *ngIf="emailField.errors?.['email']">Please enter a valid email address.</span>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-4">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-lock mr-1 mt-1" style="font-size:34px"></i>
+                  </span>
+                  <input 
+                    [(ngModel)]="vendorpassword"
+                    type="password"
+                    name="VendorPassword"
+                    class="form-control"
+                    placeholder="Password"
+                    required
+                    minlength="6"
+                    #passwordField="ngModel">
+                </div>
+                <div *ngIf="passwordField.invalid && passwordField.touched" class="text-danger small mt-1">
+                  <span *ngIf="passwordField.errors?.['required']">Password is required.</span>
+                  <span *ngIf="passwordField.errors?.['minlength']">Password must be at least 6 characters long.</span>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="row">
+                <div class="col-6">
+                  <button type="submit" class="btn btn-primary px-4" [disabled]="registerForm.invalid">
+                    Signup
+                  </button>
+                </div>
+              </div>
+
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="text-danger mt-2">
+                {{ errorMessage }}
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right Card -->
+        <div class="card text-white bg-primary py-3 d-md-down-none" style="width:44%; margin-right: 2%;">
+          <div class="card-body text-center">
+            <div>
+              <h4>Login to Vendor</h4>
+              <button (click)="goToVendorLogin()" type="button" class="btn btn-danger active ">Login</button>
+            </div>
+            <div class="mt-5">
+              <h2>Customer</h2>
+              <div>
+                <button  (click)="goToCustomerLogin()" type="button" class="btn btn-danger active px-4">Login</button>
+              </div>
+              <div>
+                
+                <button (click)="goToCustomerRegister()" type="button" class="btn btn-danger active mt-2 px-4">Signup</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
