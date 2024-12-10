@@ -8,6 +8,7 @@ import { CustomerRegisterComponent } from './pages/customer-register/customer-re
 import { CustomerLoginComponent } from './pages/customer-login/customer-login.component';
 import { VendorLayoutComponent } from './pages/vendor-layout/vendor-layout.component';
 import { CustomerLayoutComponent } from './pages/customer-layout/customer-layout.component';
+import { VendorTicketpoolComponent } from './pages/vendor-ticketpool/vendor-ticketpool.component';
 
 export const routes: Routes = [
     {
@@ -36,11 +37,17 @@ export const routes: Routes = [
         component: VendorLayoutComponent,
         children: [
             {
-                path: 'home',
+                path: 'configure',
                 canActivate: [AuthGuard],
                 component: VendorConfigureComponent,
                 data: { userType: 'VENDOR' }
             },
+            {
+                path: 'ticketpool',
+                canActivate: [AuthGuard],
+                component: VendorTicketpoolComponent,
+                data: { userType: 'VENDOT'}
+            }
         ]
     },
     {

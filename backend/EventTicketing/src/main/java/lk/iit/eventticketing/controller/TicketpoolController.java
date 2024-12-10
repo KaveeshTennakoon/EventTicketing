@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,4 +25,11 @@ public class TicketpoolController {
         response.put("message", "TicketPool for " + eventName + " created successfully");
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TicketpoolDto>> getAllTicketPools() {
+        List<TicketpoolDto> ticketPools = ticketpoolService.getAllTicketPools();
+        return ResponseEntity.ok(ticketPools);
+    }
+
 }

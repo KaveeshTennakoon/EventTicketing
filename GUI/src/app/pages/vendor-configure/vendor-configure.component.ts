@@ -26,7 +26,7 @@ export class VendorConfigureComponent {
 
   createTicketPool() {
 
-    const id = this.authService.getId();
+    const name = this.authService.getName();
 
     let ticketPoolData = {
       eventName: this.eventName,
@@ -37,7 +37,7 @@ export class VendorConfigureComponent {
       ticketReleaseRate: this.ticketReleaseRate,
       customerRetrievalRate: this.customerRetrievalRate,
       ticketsAvailable: 0,
-      vendorId: id
+      vendorName: name
     };
 
     this.http.post('http://localhost:8080/ticketpool/create', ticketPoolData).subscribe({

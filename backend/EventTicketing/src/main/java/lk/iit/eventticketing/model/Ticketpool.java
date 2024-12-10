@@ -27,11 +27,11 @@ public class Ticketpool {
     @Column(nullable = false)
     private int ticketsAvailable = 0;
     @JoinColumn(nullable = false)
-    private long vendorId;
+    private String vendorName;
 
     public Ticketpool() {}
 
-    public Ticketpool(long ticketpoolId, String eventName, BigDecimal ticketPrice, int totalTickets, Date eventDate, int ticketpool, double ticketReleaseRate, double customerRetrievalRate,long vendorId) {
+    public Ticketpool(long ticketpoolId, String eventName, BigDecimal ticketPrice, int totalTickets, Date eventDate, int ticketpool, double ticketReleaseRate, double customerRetrievalRate,String vendorName) {
         this.ticketpoolId = ticketpoolId;
         this.eventName = eventName;
         this.ticketPrice = ticketPrice;
@@ -40,7 +40,7 @@ public class Ticketpool {
         this.ticketpool = ticketpool;
         this.ticketReleaseRate = ticketReleaseRate;
         this.customerRetrievalRate = customerRetrievalRate;
-        this.vendorId = vendorId;
+        this.vendorName = vendorName;
     }
 
     public long getTicketpoolId() {
@@ -115,12 +115,12 @@ public class Ticketpool {
         this.ticketsAvailable = ticketsAvailable;
     }
 
-    public long getVendorId() {
-        return vendorId;
+    public String getVendorName() {
+        return vendorName;
     }
 
-    public void setVendorId(Vendor vendor) {
-        this.vendorId = vendorId;
+    public void setVendorName(Vendor vendor) {
+        this.vendorName = vendorName;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class Ticketpool {
                 ", ticketReleaseRate=" + ticketReleaseRate +
                 ", customerRetrievalRate=" + customerRetrievalRate +
                 ", ticketsAvailable=" + ticketsAvailable +
-                ", vendor=" + vendorId +
+                ", vendor=" + vendorName +
                 '}';
     }
 }

@@ -17,11 +17,11 @@ public class TicketpoolDto {
     private double ticketReleaseRate;
     private double customerRetrievalRate;
     private int ticketsAvailable = 0;
-    private long vendorId;
+    private String vendorName;
 
     public TicketpoolDto() {}
 
-    public TicketpoolDto(long ticketpoolId, String eventName, BigDecimal ticketPrice, int totalTickets, Date eventDate, int ticketpool, double ticketReleaseRate, double customerRetrievalRate, long vendorId) {
+    public TicketpoolDto(long ticketpoolId, String eventName, BigDecimal ticketPrice, int totalTickets, Date eventDate, int ticketpool, double ticketReleaseRate, double customerRetrievalRate, String vendorName) {
         this.ticketpoolId = ticketpoolId;
         this.eventName = eventName;
         this.ticketPrice = ticketPrice;
@@ -30,7 +30,7 @@ public class TicketpoolDto {
         this.ticketpool = ticketpool;
         this.ticketReleaseRate = ticketReleaseRate;
         this.customerRetrievalRate = customerRetrievalRate;
-        this.vendorId = vendorId;
+        this.vendorName = vendorName;
     }
 
     public long getTicketpoolId() {
@@ -105,12 +105,12 @@ public class TicketpoolDto {
         this.ticketsAvailable = ticketsAvailable;
     }
 
-    public long getVendorId() {
-        return vendorId;
+    public String getVendorName() {
+        return vendorName;
     }
 
-    public void setVendorId(long vendorId) {
-        this.vendorId = vendorId;
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class TicketpoolDto {
                 ", ticketReleaseRate=" + ticketReleaseRate +
                 ", customerRetrievalRate=" + customerRetrievalRate +
                 ", ticketsAvailable=" + ticketsAvailable +
-                ", vendor=" + vendorId +
+                ", vendor=" + vendorName +
                 '}';
     }
 }

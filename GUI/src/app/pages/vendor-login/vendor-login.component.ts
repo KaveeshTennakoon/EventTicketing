@@ -37,7 +37,7 @@ export class VendorLoginComponent {
             this.authService.setToken(response.token, 'VENDOR', response.name, response.id);
             
             // Navigate to dashboard
-            this.router.navigate(['/vendor/home']);
+            this.router.navigate(['/vendor/configure']);
           } else {
             // Handle login failure
             this.errorMessage = 'Login failed. ' + response.message;

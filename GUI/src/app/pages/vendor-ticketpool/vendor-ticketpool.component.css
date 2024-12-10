@@ -1,0 +1,94 @@
+body {
+    background-color: #dadde6;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-weight: 900;
+    border-left: 10px solid #fec500;
+    padding-left: 10px;
+    margin-bottom: 30px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+    gap: 16px; /* Space between cards */
+    margin-bottom: 16px;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    background-color: #fff;
+    color: #989898;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.poolId {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    text-align: center;
+    border-right: 2px dashed #dadde6;
+    color: #2b2b2b;
+    font-weight: 600;
+    font-size: 2.5em;
+    background-color: #f4f4f4;
+}
+
+.card-cont {
+    flex: 1;
+    padding: 16px;
+    font-size: 0.85em;
+}
+
+.card-cont h3 {
+    color: #3C3C3C;
+    font-size: 1.3em;
+    margin-bottom: 8px;
+}
+
+.card-cont .even-date,
+.card-cont .even-info p{
+    margin: 0; /* Remove margin between these sections */
+    padding: 3px 0; /* Reduce padding to bring the items closer */
+    display: flex;
+    align-items: center;
+}
+
+
+.card-cont a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 8px 16px;
+    background-color: #D8DDE0;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-top: 16px;
+}
+
+@media screen and (max-width: 860px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        flex-direction: column;
+    }
+
+    .poolId {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px dashed #dadde6;
+    }
+}

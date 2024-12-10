@@ -7,6 +7,8 @@ import lk.iit.eventticketing.service.TicketpoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TicketpoolImpl implements TicketpoolService {
 
@@ -25,7 +27,7 @@ public class TicketpoolImpl implements TicketpoolService {
                 ticketpoolDto.getTicketpool(),
                 ticketpoolDto.getTicketReleaseRate(),
                 ticketpoolDto.getCustomerRetrievalRate(),
-                ticketpoolDto.getVendorId()
+                ticketpoolDto.getVendorName()
         );
 
         ticketpoolRepo.save(ticketpool1);
@@ -33,4 +35,25 @@ public class TicketpoolImpl implements TicketpoolService {
 
     }
 
+    @Override
+    public List<TicketpoolDto> getAllTicketPools() {
+        List<Ticketpool> ticketPools = ticketpoolRepo.findAll();
+        return ticketPools.stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+
+    private TicketpoolDto convertToDto(Ticketpool ticketpool) {
+        return new TicketpoolDto(
+                ticketpool.getTicketpoolId(),
+                ticketpool.getEventName(),
+                ticketpool.getTicketPrice(),
+                ticketpool.getTotalTickets(),
+                ticketpool.getEventDate(),
+                ticketpool.getTicketpool(),
+                ticketpool.getTicketReleaseRate(),
+                ticketpool.getCustomerRetrievalRate(),
+                ticketpool.getVendorName()
+        );
+    }
 }
