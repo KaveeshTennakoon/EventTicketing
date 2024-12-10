@@ -1,5 +1,12 @@
 <section class="container">
   <h1>TicketPool</h1>
+  
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Ticket Pools Grid -->
   <div class="row">
     <div *ngFor="let ticket of ticketPools" class="card">
       <section class="poolId text-center">
@@ -8,18 +15,21 @@
       <section class="card-cont">
         <small>{{ ticket.vendorName }}</small>
         <h3>{{ ticket.eventName }}</h3>
+        
         <div class="even-date">
           <i class="fa fa-calendar"></i>
           <time>
             <span>{{ ticket.eventDate | date: 'fullDate' }}</span>
           </time>
         </div>
+        
         <div class="even-info mt-2">
           <p>Ticket Price: {{ ticket.ticketPrice | currency }}</p>
           <p>Ticket Release Rate: {{ ticket.ticketReleaseRate }} seconds</p>
           <p>Customer Retrieval Rate: {{ ticket.customerRetrievalRate }}</p>
           <p>Tickets Available: {{ ticket.ticketsAvailable }}/{{ ticket.totalTickets }}</p>
         </div>
+        
         <button 
           [ngClass]="activeTicketAdditionPools.has(ticket.ticketpoolId) ? 'btn btn-danger' : 'btn btn-success'"
           [disabled]="ticket.ticketsAvailable >= ticket.totalTickets"
@@ -28,8 +38,5 @@
         </button>
       </section>
     </div>
-  </div>
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
   </div>
 </section>

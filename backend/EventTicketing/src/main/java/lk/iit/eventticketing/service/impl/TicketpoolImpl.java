@@ -9,15 +9,13 @@ import lk.iit.eventticketing.repo.TicketlogRepo;
 import lk.iit.eventticketing.repo.TicketpoolRepo;
 import lk.iit.eventticketing.service.TicketpoolService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class TicketpoolImpl implements TicketpoolService {
@@ -29,7 +27,7 @@ public class TicketpoolImpl implements TicketpoolService {
     @Autowired
     private TicketlogRepo ticketlogRepo;
 
-    private Map<Long, Map<Long, CompletableFuture<Void>>> activeTicketAdditionTasks = new ConcurrentHashMap<>();
+    private Map<Long, Map<Long, AtomicBoolean>> ticketAdditionStopFlags = new ConcurrentHashMap<>();
 
     @Override
     public String createTicketpool(TicketpoolDto ticketpoolDto) {
@@ -99,23 +97,21 @@ public class TicketpoolImpl implements TicketpoolService {
         Ticketpool ticketpool = ticketpoolRepo.findById(ticketlogDto.getEventId())
                 .orElseThrow(() -> new Exception("Ticket pool not found"));
 
-        // Get the user ID
         Long userId = ticketlogDto.getUserId();
+        Long ticketPoolId = ticketpool.getTicketpoolId();
 
-        // Initialize the map for the ticket pool if not present
-        activeTicketAdditionTasks
-                .computeIfAbsent(ticketpool.getTicketpoolId(), k -> new ConcurrentHashMap<>());
+        // Initialize stop flags for this ticket pool if not present
+        ticketAdditionStopFlags
+                .computeIfAbsent(ticketPoolId, k -> new ConcurrentHashMap<>());
 
-        // Check if a task is already running for this user and pool
-        if (activeTicketAdditionTasks.get(ticketpool.getTicketpoolId()).containsKey(userId)) {
-            // If a task is running, create another task for the user (allows multiple threads)
-            System.out.println("Ticket addition already in progress, starting a new thread");
-        }
+        // Create an atomic boolean to control the thread
+        AtomicBoolean stopFlag = new AtomicBoolean(false);
+        ticketAdditionStopFlags.get(ticketPoolId).put(userId, stopFlag);
 
         // Create and start an async task for the user
         CompletableFuture<Void> ticketAdditionTask = CompletableFuture.runAsync(() -> {
             try {
-                while (!Thread.currentThread().isInterrupted()) {
+                while (!stopFlag.get() && !Thread.currentThread().isInterrupted()) {
                     // Add ticket
                     addTicketToPool(ticketlogDto);
 
@@ -130,29 +126,43 @@ public class TicketpoolImpl implements TicketpoolService {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (Exception e) {
-                // Log or handle exception
                 e.printStackTrace();
+            } finally {
+                // Cleanup
+                ticketAdditionStopFlags.get(ticketPoolId).remove(userId);
             }
         });
 
-        // Store the task for the specific user in the map
-        activeTicketAdditionTasks.get(ticketpool.getTicketpoolId()).put(userId, ticketAdditionTask);
         return true;
     }
 
+
     @Override
     @Transactional
-    public synchronized boolean stopTicketAddition(Long ticketPoolId, Long userId) {
-        Map<Long, CompletableFuture<Void>> userTasks = activeTicketAdditionTasks.get(ticketPoolId);
-        if (userTasks != null) {
-            CompletableFuture<Void> task = userTasks.get(userId);
-            if (task != null) {
-                task.cancel(true);
-                userTasks.remove(userId);
+    public synchronized boolean stopTicketAddition(Long ticketPoolId, Long userId) throws Exception {
+        // Check if the pool and user exist in the stop flags
+        if (ticketAdditionStopFlags.containsKey(ticketPoolId)) {
+            Map<Long, AtomicBoolean> userStopFlags = ticketAdditionStopFlags.get(ticketPoolId);
+
+            if (userStopFlags != null && userStopFlags.containsKey(userId)) {
+                // Set the stop flag to true
+                AtomicBoolean stopFlag = userStopFlags.get(userId);
+                stopFlag.set(true);
+
+                // Remove the stop flag
+                userStopFlags.remove(userId);
+
+                // Clean up the pool map if no flags remain
+                if (userStopFlags.isEmpty()) {
+                    ticketAdditionStopFlags.remove(ticketPoolId);
+                }
+
                 return true;
             }
         }
-        return false;
+
+        throw new Exception("No active ticket addition task found for this user in this pool");
     }
+
 }
 
