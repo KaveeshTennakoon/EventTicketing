@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../auth/service/auth.service';
 
 @Component({
@@ -9,7 +8,7 @@ import { AuthService } from '../../auth/service/auth.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './vendor-ticketpool.component.html',
-  styleUrl: './vendor-ticketpool.component.css'
+  styleUrls: ['./vendor-ticketpool.component.css']
 })
 export class VendorTicketpoolComponent implements OnInit {
   ticketPools: any[] = [];
@@ -45,11 +44,11 @@ export class VendorTicketpoolComponent implements OnInit {
       userId: this.authService.getId()
     };
   
-    this.http.post('http://localhost:8080/ticketpool/start-ticket-addition', payload)
+    this.http.post(`http://localhost:8080/ticketpool/start-ticket-addition/${ticketPool.ticketpoolId}/${this.authService.getId()}`, payload)
       .subscribe({
         next: (response) => {
           this.activeTicketAdditionPools.add(ticketPool.ticketpoolId);
-          this.loadTicketPools();
+          this.loadTicketPools();  // Refresh the ticket pools after starting
         },
         error: (err) => {
           this.errorMessage = err.error.error || 'Error starting ticket addition';
@@ -59,11 +58,11 @@ export class VendorTicketpoolComponent implements OnInit {
   }
 
   stopTicketAddition(ticketPoolId: number): void {
-    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-addition/${ticketPoolId}`, {})
+    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-addition/${ticketPoolId}/${this.authService.getId()}`, {})
       .subscribe({
         next: (response) => {
           this.activeTicketAdditionPools.delete(ticketPoolId);
-          this.loadTicketPools();
+          this.loadTicketPools();  // Refresh the ticket pools after stopping
         },
         error: (err) => {
           this.errorMessage = err.error.error || 'Error stopping ticket addition';

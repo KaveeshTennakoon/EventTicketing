@@ -29,7 +29,7 @@ public class TicketpoolImpl implements TicketpoolService {
     @Autowired
     private TicketlogRepo ticketlogRepo;
 
-    private Map<Long, CompletableFuture<Void>> activeTicketAdditionTasks = new ConcurrentHashMap<>();
+    private Map<Long, Map<Long, CompletableFuture<Void>>> activeTicketAdditionTasks = new ConcurrentHashMap<>();
 
     @Override
     public String createTicketpool(TicketpoolDto ticketpoolDto) {
@@ -99,12 +99,20 @@ public class TicketpoolImpl implements TicketpoolService {
         Ticketpool ticketpool = ticketpoolRepo.findById(ticketlogDto.getEventId())
                 .orElseThrow(() -> new Exception("Ticket pool not found"));
 
-        // Check if a task is already running for this ticket pool
-        if (activeTicketAdditionTasks.containsKey(ticketpool.getTicketpoolId())) {
-            throw new Exception("Ticket addition already in progress for this pool");
+        // Get the user ID
+        Long userId = ticketlogDto.getUserId();
+
+        // Initialize the map for the ticket pool if not present
+        activeTicketAdditionTasks
+                .computeIfAbsent(ticketpool.getTicketpoolId(), k -> new ConcurrentHashMap<>());
+
+        // Check if a task is already running for this user and pool
+        if (activeTicketAdditionTasks.get(ticketpool.getTicketpoolId()).containsKey(userId)) {
+            // If a task is running, create another task for the user (allows multiple threads)
+            System.out.println("Ticket addition already in progress, starting a new thread");
         }
 
-        // Create and start an async task for continuous ticket addition
+        // Create and start an async task for the user
         CompletableFuture<Void> ticketAdditionTask = CompletableFuture.runAsync(() -> {
             try {
                 while (!Thread.currentThread().isInterrupted()) {
@@ -127,23 +135,24 @@ public class TicketpoolImpl implements TicketpoolService {
             }
         });
 
-        activeTicketAdditionTasks.put(ticketpool.getTicketpoolId(), ticketAdditionTask);
+        // Store the task for the specific user in the map
+        activeTicketAdditionTasks.get(ticketpool.getTicketpoolId()).put(userId, ticketAdditionTask);
         return true;
-
     }
 
     @Override
     @Transactional
-    public synchronized boolean stopTicketAddition(Long ticketPoolId) {
-        CompletableFuture<Void> task = activeTicketAdditionTasks.get(ticketPoolId);
-        if (task != null) {
-            task.cancel(true);
-            activeTicketAdditionTasks.remove(ticketPoolId);
-            return true;
+    public synchronized boolean stopTicketAddition(Long ticketPoolId, Long userId) {
+        Map<Long, CompletableFuture<Void>> userTasks = activeTicketAdditionTasks.get(ticketPoolId);
+        if (userTasks != null) {
+            CompletableFuture<Void> task = userTasks.get(userId);
+            if (task != null) {
+                task.cancel(true);
+                userTasks.remove(userId);
+                return true;
+            }
         }
         return false;
     }
-
-
-
 }
+

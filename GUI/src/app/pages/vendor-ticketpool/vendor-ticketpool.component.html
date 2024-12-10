@@ -3,7 +3,7 @@
   <div class="row">
     <div *ngFor="let ticket of ticketPools" class="card">
       <section class="poolId text-center">
-        <span>{{ticket.ticketpoolId}}</span>
+        <span>{{ ticket.ticketpoolId }}</span>
       </section>
       <section class="card-cont">
         <small>{{ ticket.vendorName }}</small>
@@ -17,7 +17,7 @@
         <div class="even-info mt-2">
           <p>Ticket Price: {{ ticket.ticketPrice | currency }}</p>
           <p>Ticket Release Rate: {{ ticket.ticketReleaseRate }} seconds</p>
-          <p>Customer Retrieval Rate: {{ ticket.customerRetrievalRate}}</p>
+          <p>Customer Retrieval Rate: {{ ticket.customerRetrievalRate }}</p>
           <p>Tickets Available: {{ ticket.ticketsAvailable }}/{{ ticket.totalTickets }}</p>
         </div>
         <button 
