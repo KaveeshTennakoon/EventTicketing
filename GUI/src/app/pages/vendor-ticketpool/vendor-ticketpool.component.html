@@ -1,7 +1,7 @@
 <section class="container">
     <h1>TicketPool</h1>
     <div class="row">
-      <article *ngFor="let ticket of ticketPools" class="card">
+      <div *ngFor="let ticket of ticketPools" class="card">
         <section class="poolId text-center">
           <span>{{ticket.ticketpoolId}}</span>
         </section>
@@ -20,9 +20,13 @@
             <p>Customer Retrieval Rate: {{ ticket.customerRetrievalRate}}</p>
             <p>Tickets Available: {{ ticket.ticketsAvailable }}</p>
           </div>
-          <button class="btn btn-success mt-3">Start adding tickets</button>
+          <button 
+          class="btn btn-success mt-3" 
+          (click)="addTicketToPool(ticket.ticketpoolId)">
+          Start adding tickets
+        </button>
         </section>
-      </article>
+      </div>
     </div>
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}

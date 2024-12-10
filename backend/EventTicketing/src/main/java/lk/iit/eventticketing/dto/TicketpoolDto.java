@@ -16,12 +16,12 @@ public class TicketpoolDto {
     private int ticketpool;
     private double ticketReleaseRate;
     private double customerRetrievalRate;
-    private int ticketsAvailable = 0;
+    private int ticketsAvailable;
     private String vendorName;
 
     public TicketpoolDto() {}
 
-    public TicketpoolDto(long ticketpoolId, String eventName, BigDecimal ticketPrice, int totalTickets, Date eventDate, int ticketpool, double ticketReleaseRate, double customerRetrievalRate, String vendorName) {
+    public TicketpoolDto(long ticketpoolId, String eventName, BigDecimal ticketPrice, int totalTickets, Date eventDate, int ticketpool, double ticketReleaseRate, double customerRetrievalRate, int ticketsAvailable,String vendorName) {
         this.ticketpoolId = ticketpoolId;
         this.eventName = eventName;
         this.ticketPrice = ticketPrice;
@@ -30,6 +30,7 @@ public class TicketpoolDto {
         this.ticketpool = ticketpool;
         this.ticketReleaseRate = ticketReleaseRate;
         this.customerRetrievalRate = customerRetrievalRate;
+        this.ticketsAvailable = ticketsAvailable;
         this.vendorName = vendorName;
     }
 

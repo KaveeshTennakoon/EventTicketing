@@ -1,8 +1,3 @@
-body {
-    background-color: #dadde6;
-    font-family: Arial, sans-serif;
-}
-
 h1 {
     text-transform: uppercase;
     font-weight: 900;
@@ -13,8 +8,8 @@ h1 {
 
 .row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two cards per row */
-    gap: 16px; /* Space between cards */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
     margin-bottom: 16px;
 }
 
@@ -58,8 +53,8 @@ h1 {
 
 .card-cont .even-date,
 .card-cont .even-info p{
-    margin: 0; /* Remove margin between these sections */
-    padding: 3px 0; /* Reduce padding to bring the items closer */
+    margin: 0;
+    padding: 3px 0;
     display: flex;
     align-items: center;
 }
@@ -76,6 +71,16 @@ h1 {
     font-size: 0.9em;
     margin-top: 16px;
 }
+
+.ticket-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .ticket-actions button {
+    width: 48%;
+  }
+  
 
 @media screen and (max-width: 860px) {
     .row {

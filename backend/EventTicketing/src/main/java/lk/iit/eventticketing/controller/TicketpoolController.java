@@ -1,5 +1,6 @@
 package lk.iit.eventticketing.controller;
 
+import lk.iit.eventticketing.dto.TicketlogDto;
 import lk.iit.eventticketing.dto.TicketpoolDto;
 import lk.iit.eventticketing.service.TicketpoolService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,42 @@ public class TicketpoolController {
     public ResponseEntity<List<TicketpoolDto>> getAllTicketPools() {
         List<TicketpoolDto> ticketPools = ticketpoolService.getAllTicketPools();
         return ResponseEntity.ok(ticketPools);
+    }
+
+    @PostMapping(path = "addtickets")
+    public ResponseEntity<?> addTicketToPool(@RequestBody TicketlogDto ticketlogDto){
+        try {
+            boolean added = ticketpoolService.addTicketToPool(ticketlogDto);
+            return ResponseEntity.ok().body(Map.of("message", "Ticket added successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    //
+    //
+    @PostMapping(path = "/start-auto-tickets")
+    public ResponseEntity<?> startAutoTicketAddition(
+            @RequestParam Long ticketPoolId,
+            @RequestParam String userName,
+            @RequestParam Long userId
+    ) {
+        try {
+            boolean started = ticketpoolService.startAutoTicketAddition(ticketPoolId, userName, userId);
+            return ResponseEntity.ok().body(Map.of("message", "Automatic ticket addition started"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping(path = "/stop-auto-tickets")
+    public ResponseEntity<?> stopAutoTicketAddition(@RequestParam Long ticketPoolId) {
+        try {
+            boolean stopped = ticketpoolService.stopAutoTicketAddition(ticketPoolId);
+            return ResponseEntity.ok().body(Map.of("message", "Automatic ticket addition stopped"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
 }
