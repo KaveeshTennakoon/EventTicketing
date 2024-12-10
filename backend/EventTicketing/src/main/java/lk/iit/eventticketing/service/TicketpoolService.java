@@ -13,8 +13,4 @@ public interface TicketpoolService {
 
     boolean addTicketToPool(TicketlogDto ticketlogDto) throws Exception;
 
-    public boolean startAutoTicketAddition(Long ticketPoolId, String userName, Long userId) throws Exception;
-
-    public boolean stopAutoTicketAddition(Long ticketPoolId) throws Exception;
-
 }

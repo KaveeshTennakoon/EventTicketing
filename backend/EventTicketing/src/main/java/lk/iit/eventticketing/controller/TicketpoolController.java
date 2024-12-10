@@ -43,30 +43,4 @@ public class TicketpoolController {
         }
     }
 
-    //
-    //
-    @PostMapping(path = "/start-auto-tickets")
-    public ResponseEntity<?> startAutoTicketAddition(
-            @RequestParam Long ticketPoolId,
-            @RequestParam String userName,
-            @RequestParam Long userId
-    ) {
-        try {
-            boolean started = ticketpoolService.startAutoTicketAddition(ticketPoolId, userName, userId);
-            return ResponseEntity.ok().body(Map.of("message", "Automatic ticket addition started"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    @PostMapping(path = "/stop-auto-tickets")
-    public ResponseEntity<?> stopAutoTicketAddition(@RequestParam Long ticketPoolId) {
-        try {
-            boolean stopped = ticketpoolService.stopAutoTicketAddition(ticketPoolId);
-            return ResponseEntity.ok().body(Map.of("message", "Automatic ticket addition stopped"));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
 }
