@@ -80,17 +80,23 @@ public class TicketpoolImpl implements TicketpoolService {
         Ticketpool ticketpool = ticketpoolRepo.findById(ticketlogDto.getEventId())
                 .orElseThrow(() -> new Exception("Ticket pool not found"));
 
-        if (ticketpool.getTicketAdd() >= ticketpool.getTotalTickets() || ticketpool.getTicketsAvailable() >= ticketpool.getTicketpool()) {
+        // Check if tickets can be added based on the conditions
+        if (ticketpool.getTicketAdd() >= ticketpool.getTotalTickets()) {
             throw new Exception("Ticket pool is full");
         }
-        else {
-            Ticketlog ticketlog = new Ticketlog("added", ticketlogDto.getUserName(), ticketlogDto.getUserId(), ticketpool.getEventName(), ticketpool.getTicketpoolId(), ticketpool.getTicketAdd());
-            ticketlogRepo.save(ticketlog);
-
-            ticketpool.setTicketsAvailable(ticketpool.getTicketsAvailable() + 1);
-            ticketpool.setTicketAdd(ticketpool.getTicketAdd() + 1);
-            ticketpoolRepo.save(ticketpool);
+        if (ticketpool.getTicketsAvailable() >= ticketpool.getTicketpool()) {
+            throw new Exception("No more tickets can be added to the pool");
         }
+
+        // Add ticket to the log
+        Ticketlog ticketlog = new Ticketlog("added", ticketlogDto.getUserName(), ticketlogDto.getUserId(),
+                ticketpool.getEventName(), ticketpool.getTicketpoolId(), ticketpool.getTicketAdd()+1);
+        ticketlogRepo.save(ticketlog);
+
+        // Update the ticket pool with new values
+        ticketpool.setTicketsAvailable(ticketpool.getTicketsAvailable() + 1);  // Increase available tickets
+        ticketpool.setTicketAdd(ticketpool.getTicketAdd() + 1);                // Increase added tickets
+        ticketpoolRepo.save(ticketpool);
 
         return true;
     }
@@ -178,7 +184,7 @@ public class TicketpoolImpl implements TicketpoolService {
             throw new Exception("All Tickets are sold");
         }
         else {
-            Ticketlog ticketlog = new Ticketlog("bought", ticketlogDto.getUserName(), ticketlogDto.getUserId(), ticketpool.getEventName(), ticketpool.getTicketpoolId(), ticketpool.getTicketBuy());
+            Ticketlog ticketlog = new Ticketlog("bought", ticketlogDto.getUserName(), ticketlogDto.getUserId(), ticketpool.getEventName(), ticketpool.getTicketpoolId(), ticketpool.getTicketBuy()+1);
             ticketlogRepo.save(ticketlog);
 
             ticketpool.setTicketsAvailable(ticketpool.getTicketsAvailable() - 1);
