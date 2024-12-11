@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../auth/service/auth.service';
 import { LogComponent } from "../log/log.component";
 
@@ -11,15 +11,21 @@ import { LogComponent } from "../log/log.component";
   templateUrl: './vendor-ticketpool.component.html',
   styleUrls: ['./vendor-ticketpool.component.css']
 })
-export class VendorTicketpoolComponent implements OnInit {
+export class VendorTicketpoolComponent implements OnInit, OnDestroy {
   ticketPools: any[] = [];
   errorMessage: string = '';
   activeTicketAdditionPools: Set<number> = new Set();
+  private pollingIntervalId!: any; // Stores the interval ID for clearing later
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadTicketPools();
+    this.startPolling(); // Start polling when the component initializes
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling(); // Clear the interval when the component is destroyed
   }
 
   loadTicketPools(): void {
@@ -47,9 +53,9 @@ export class VendorTicketpoolComponent implements OnInit {
   
     this.http.post(`http://localhost:8080/ticketpool/start-ticket-addition/${ticketPool.ticketpoolId}/${this.authService.getId()}`, payload)
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.activeTicketAdditionPools.add(ticketPool.ticketpoolId);
-          this.loadTicketPools();  // Refresh the ticket pools after starting
+          this.loadTicketPools(); // Refresh the ticket pools after starting
         },
         error: (err) => {
           this.errorMessage = err.error.error || 'Error starting ticket addition';
@@ -61,14 +67,26 @@ export class VendorTicketpoolComponent implements OnInit {
   stopTicketAddition(ticketPoolId: number): void {
     this.http.post(`http://localhost:8080/ticketpool/stop-ticket-addition/${ticketPoolId}/${this.authService.getId()}`, {})
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.activeTicketAdditionPools.delete(ticketPoolId);
-          this.loadTicketPools();  // Refresh the ticket pools after stopping
+          this.loadTicketPools(); // Refresh the ticket pools after stopping
         },
         error: (err) => {
           this.errorMessage = err.error.error || 'Error stopping ticket addition';
           console.log(err);
         }
       });
+  }
+
+  startPolling(): void {
+    this.pollingIntervalId = setInterval(() => {
+      this.loadTicketPools();
+    }, 1000); // Poll every 5 seconds
+  }
+
+  stopPolling(): void {
+    if (this.pollingIntervalId) {
+      clearInterval(this.pollingIntervalId);
+    }
   }
 }

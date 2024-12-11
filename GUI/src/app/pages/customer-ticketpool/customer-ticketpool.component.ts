@@ -14,12 +14,18 @@ import { LogComponent } from "../log/log.component";
 export class CustomerTicketpoolComponent implements OnInit {
   ticketPools: any[] = [];
   errorMessage: string = '';
-  activeTicketBuyPools: Set<number> = new Set();
+  activeTicketAdditionPools: Set<number> = new Set();
+  private pollingIntervalId!: any; // Stores the interval ID for clearing later
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadTicketPools();
+    this.startPolling(); // Start polling when the component initializes
+  }
+
+  ngOnDestroy(): void {
+    this.stopPolling(); // Clear the interval when the component is destroyed
   }
 
   loadTicketPools(): void {
@@ -31,25 +37,25 @@ export class CustomerTicketpoolComponent implements OnInit {
   }
 
   toggleTicketAddition(ticketPool: any): void {
-    if (this.activeTicketBuyPools.has(ticketPool.ticketpoolId)) {
-      this.stopTicketBuy(ticketPool.ticketpoolId);
+    if (this.activeTicketAdditionPools.has(ticketPool.ticketpoolId)) {
+      this.stopTicketAddition(ticketPool.ticketpoolId);
     } else {
-      this.startTicketBuy(ticketPool);
+      this.startTicketAddition(ticketPool);
     }
   }
 
-  startTicketBuy(ticketPool: any): void {
+  startTicketAddition(ticketPool: any): void {
     const payload = {
       eventId: ticketPool.ticketpoolId,
       userName: this.authService.getName(),
       userId: this.authService.getId()
     };
   
-    this.http.post(`http://localhost:8080/ticketpool/start-ticket-buy/${ticketPool.ticketpoolId}/${this.authService.getId()}`, payload)
+    this.http.post(`http://localhost:8080/ticketpool/start-ticket-addition/${ticketPool.ticketpoolId}/${this.authService.getId()}`, payload)
       .subscribe({
-        next: (response) => {
-          this.activeTicketBuyPools.add(ticketPool.ticketpoolId);
-          this.loadTicketPools();  // Refresh the ticket pools after starting
+        next: () => {
+          this.activeTicketAdditionPools.add(ticketPool.ticketpoolId);
+          this.loadTicketPools(); // Refresh the ticket pools after starting
         },
         error: (err) => {
           this.errorMessage = err.error.error || 'Error starting ticket addition';
@@ -58,17 +64,29 @@ export class CustomerTicketpoolComponent implements OnInit {
       });
   }
 
-  stopTicketBuy(ticketPoolId: number): void {
-    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-buy/${ticketPoolId}/${this.authService.getId()}`, {})
+  stopTicketAddition(ticketPoolId: number): void {
+    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-addition/${ticketPoolId}/${this.authService.getId()}`, {})
       .subscribe({
-        next: (response) => {
-          this.activeTicketBuyPools.delete(ticketPoolId);
-          this.loadTicketPools();  // Refresh the ticket pools after stopping
+        next: () => {
+          this.activeTicketAdditionPools.delete(ticketPoolId);
+          this.loadTicketPools(); // Refresh the ticket pools after stopping
         },
         error: (err) => {
           this.errorMessage = err.error.error || 'Error stopping ticket addition';
           console.log(err);
         }
       });
+  }
+
+  startPolling(): void {
+    this.pollingIntervalId = setInterval(() => {
+      this.loadTicketPools();
+    }, 1000); // Poll every 5 seconds
+  }
+
+  stopPolling(): void {
+    if (this.pollingIntervalId) {
+      clearInterval(this.pollingIntervalId);
+    }
   }
 }
