@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../auth/service/auth.service';
 import { Router } from '@angular/router';
 import { CustomerTicketpoolComponent } from '../customer-ticketpool/customer-ticketpool.component';
+import { LogComponent } from "../log/log.component";
 
 @Component({
   selector: 'app-customer-layout',
   standalone: true,
-  imports: [CustomerTicketpoolComponent],
+  imports: [CustomerTicketpoolComponent, LogComponent],
   templateUrl: './customer-layout.component.html',
   styleUrl: './customer-layout.component.css'
 })

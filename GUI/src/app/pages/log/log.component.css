@@ -1,0 +1,18 @@
+.container {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: initial;
+    border: none;
+}
+.card-body {
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}

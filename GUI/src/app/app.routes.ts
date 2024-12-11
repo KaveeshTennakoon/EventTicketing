@@ -9,6 +9,7 @@ import { VendorLayoutComponent } from './pages/vendor-layout/vendor-layout.compo
 import { CustomerLayoutComponent } from './pages/customer-layout/customer-layout.component';
 import { VendorTicketpoolComponent } from './pages/vendor-ticketpool/vendor-ticketpool.component';
 import { CustomerTicketpoolComponent } from './pages/customer-ticketpool/customer-ticketpool.component';
+import { LogComponent } from './pages/log/log.component';
 
 export const routes: Routes = [
     {
@@ -46,7 +47,13 @@ export const routes: Routes = [
                 path: 'ticketpool',
                 canActivate: [AuthGuard],
                 component: VendorTicketpoolComponent,
-                data: { userType: 'VENDOT'}
+                data: { userType: 'VENDOR'}
+            },
+            {
+                path: 'log',
+                canActivate: [AuthGuard],
+                component: LogComponent,
+                data: { userType: 'VENDOR' }
             }
         ]
     },

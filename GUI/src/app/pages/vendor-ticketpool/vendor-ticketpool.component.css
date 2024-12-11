@@ -1,3 +1,29 @@
+.container {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+}
+
+.ticket-pool {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    width: 100%;
+}
+.ticket-pool::-webkit-scrollbar {
+    display: none;
+  }
+
+
+/* Optional: Style for the app-log component */
+app-log {
+    width: 100%;
+    height: auto;
+}
+
+
 h1 {
     text-transform: uppercase;
     font-weight: 900;

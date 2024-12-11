@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/service/auth.service';
 import { CommonModule } from '@angular/common';
+import { LogComponent } from "../log/log.component";
 
 @Component({
   selector: 'app-customer-ticketpool',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LogComponent],
   templateUrl: './customer-ticketpool.component.html',
   styleUrl: './customer-ticketpool.component.css'
 })
