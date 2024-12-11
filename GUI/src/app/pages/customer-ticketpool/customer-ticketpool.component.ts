@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../auth/service/auth.service';
 import { CommonModule } from '@angular/common';
 import { LogComponent } from "../log/log.component";
@@ -9,23 +9,23 @@ import { LogComponent } from "../log/log.component";
   standalone: true,
   imports: [CommonModule, LogComponent],
   templateUrl: './customer-ticketpool.component.html',
-  styleUrl: './customer-ticketpool.component.css'
+  styleUrls: ['./customer-ticketpool.component.css']
 })
-export class CustomerTicketpoolComponent implements OnInit {
+export class CustomerTicketpoolComponent implements OnInit, OnDestroy {
   ticketPools: any[] = [];
   errorMessage: string = '';
-  activeTicketAdditionPools: Set<number> = new Set();
+  activeTicketBuyPools: Set<number> = new Set();
   private pollingIntervalId!: any; // Stores the interval ID for clearing later
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadTicketPools();
-    this.startPolling(); // Start polling when the component initializes
+    this.startPolling(); // Start polling on component initialization
   }
 
   ngOnDestroy(): void {
-    this.stopPolling(); // Clear the interval when the component is destroyed
+    this.stopPolling(); // Stop polling when the component is destroyed
   }
 
   loadTicketPools(): void {
@@ -37,42 +37,42 @@ export class CustomerTicketpoolComponent implements OnInit {
   }
 
   toggleTicketAddition(ticketPool: any): void {
-    if (this.activeTicketAdditionPools.has(ticketPool.ticketpoolId)) {
-      this.stopTicketAddition(ticketPool.ticketpoolId);
+    if (this.activeTicketBuyPools.has(ticketPool.ticketpoolId)) {
+      this.stopTicketBuy(ticketPool.ticketpoolId);
     } else {
-      this.startTicketAddition(ticketPool);
+      this.startTicketBuy(ticketPool);
     }
   }
 
-  startTicketAddition(ticketPool: any): void {
+  startTicketBuy(ticketPool: any): void {
     const payload = {
       eventId: ticketPool.ticketpoolId,
       userName: this.authService.getName(),
       userId: this.authService.getId()
     };
   
-    this.http.post(`http://localhost:8080/ticketpool/start-ticket-addition/${ticketPool.ticketpoolId}/${this.authService.getId()}`, payload)
+    this.http.post(`http://localhost:8080/ticketpool/start-ticket-buy/${ticketPool.ticketpoolId}/${this.authService.getId()}`, payload)
       .subscribe({
         next: () => {
-          this.activeTicketAdditionPools.add(ticketPool.ticketpoolId);
+          this.activeTicketBuyPools.add(ticketPool.ticketpoolId);
           this.loadTicketPools(); // Refresh the ticket pools after starting
         },
         error: (err) => {
-          this.errorMessage = err.error.error || 'Error starting ticket addition';
+          this.errorMessage = err.error.error || 'Error starting ticket buy';
           console.log(err);
         }
       });
   }
 
-  stopTicketAddition(ticketPoolId: number): void {
-    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-addition/${ticketPoolId}/${this.authService.getId()}`, {})
+  stopTicketBuy(ticketPoolId: number): void {
+    this.http.post(`http://localhost:8080/ticketpool/stop-ticket-buy/${ticketPoolId}/${this.authService.getId()}`, {})
       .subscribe({
         next: () => {
-          this.activeTicketAdditionPools.delete(ticketPoolId);
+          this.activeTicketBuyPools.delete(ticketPoolId);
           this.loadTicketPools(); // Refresh the ticket pools after stopping
         },
         error: (err) => {
-          this.errorMessage = err.error.error || 'Error stopping ticket addition';
+          this.errorMessage = err.error.error || 'Error stopping ticket buy';
           console.log(err);
         }
       });
@@ -81,7 +81,7 @@ export class CustomerTicketpoolComponent implements OnInit {
   startPolling(): void {
     this.pollingIntervalId = setInterval(() => {
       this.loadTicketPools();
-    }, 1000); // Poll every 5 seconds
+    }, 1000);
   }
 
   stopPolling(): void {
