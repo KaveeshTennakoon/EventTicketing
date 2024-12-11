@@ -80,7 +80,7 @@ public class TicketpoolImpl implements TicketpoolService {
         Ticketpool ticketpool = ticketpoolRepo.findById(ticketlogDto.getEventId())
                 .orElseThrow(() -> new Exception("Ticket pool not found"));
 
-        if (ticketpool.getTicketBuy() >= ticketpool.getTotalTickets() || ticketpool.getTicketsAvailable() >= ticketpool.getTicketpool()) {
+        if (ticketpool.getTicketAdd() >= ticketpool.getTotalTickets() || ticketpool.getTicketsAvailable() >= ticketpool.getTicketpool()) {
             throw new Exception("Ticket pool is full");
         }
         else {
