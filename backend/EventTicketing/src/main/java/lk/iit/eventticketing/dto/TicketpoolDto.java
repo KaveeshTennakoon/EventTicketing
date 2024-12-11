@@ -17,6 +17,8 @@ public class TicketpoolDto {
     private double ticketReleaseRate;
     private double customerRetrievalRate;
     private int ticketsAvailable;
+    private int ticketAdd = 0;
+    private int ticketBuy = 0;
     private String vendorName;
 
     public TicketpoolDto() {}
@@ -112,6 +114,22 @@ public class TicketpoolDto {
 
     public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
+    }
+
+    public int getTicketAdd() {
+        return ticketAdd;
+    }
+
+    public void setTicketAdd(int ticketAdd) {
+        this.ticketAdd = ticketAdd;
+    }
+
+    public int getTicketBuy() {
+        return ticketBuy;
+    }
+
+    public void setTicketBuy(int ticketBuy) {
+        this.ticketBuy = ticketBuy;
     }
 
     @Override

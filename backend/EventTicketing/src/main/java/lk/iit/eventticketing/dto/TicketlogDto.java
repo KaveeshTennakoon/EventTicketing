@@ -9,16 +9,18 @@ public class TicketlogDto {
     private Long userId;
     private String eventName;
     private Long eventId;
+    private int ticketNo;
 
     public TicketlogDto() {}
 
-    public TicketlogDto(Long ticketlogId, String process, String userName, Long userId, String eventName, int ticketsAvailable,Long eventId) {
+    public TicketlogDto(Long ticketlogId, String process, String userName, Long userId, String eventName, int ticketNo,Long eventId) {
         this.ticketlogId = ticketlogId;
         this.process = process;
         this.userName = userName;
         this.userId = userId;
         this.eventName = eventName;
         this.eventId = eventId;
+        this.ticketNo = ticketNo;
     }
 
     public Long getTicketlogId() {
@@ -67,6 +69,14 @@ public class TicketlogDto {
 
     public void setEventId(Long eventId) {
         this.eventId = eventId;
+    }
+
+    public int getTicketNo() {
+        return ticketNo;
+    }
+
+    public void setTicketNo(int ticketNo) {
+        this.ticketNo = ticketNo;
     }
 
     @Override
