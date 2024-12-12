@@ -6,7 +6,7 @@
     <div *ngIf="errorMessage" class="alert alert-danger">
       {{ errorMessage }}
     </div>
-
+  
     <!-- Ticket Pools Grid -->
     <div class="row">
       <div *ngFor="let ticket of ticketPools" class="card">
@@ -32,15 +32,16 @@
           </div>
           
           <button 
-            [ngClass]="activeTicketAdditionPools.has(ticket.ticketpoolId) ? 'btn btn-danger' : 'btn btn-success'"
-            [disabled]="ticket.ticketsAvailable >= ticket.ticketpool"
+            [ngClass]="activeTicketBuyPools.has(ticket.ticketpoolId) ? 'btn btn-danger' : 'btn btn-success'"
+            [disabled]="ticket.ticketsAvailable <= 0"
             (click)="toggleTicketAddition(ticket)">
-            {{ activeTicketAdditionPools.has(ticket.ticketpoolId) ? 'Stop Adding Tickets' : 'Start Adding Tickets' }}
+            {{ activeTicketBuyPools.has(ticket.ticketpoolId) ? 'Stop Buying Tickets' : 'Start Buying Tickets' }}
           </button>
         </section>
       </div>
     </div>
   </div>
+
   <!-- app-log positioned to the right -->
   <div class="log-container">
     <app-log></app-log>

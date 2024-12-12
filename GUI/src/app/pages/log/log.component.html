@@ -1,0 +1,42 @@
+<div class="container">
+	<div class="container-fluid p-0">
+	  <h1 class="h3 mb-3">Log</h1>
+	  <div class="row">
+		<div class="col-xl-8">
+		  <div class="card">
+			<div class="card-body">
+			  <table class="table table-striped" style="width:100%">
+				<thead>
+				  <tr>
+					<th>Event Name</th>
+					<th>User Name</th>
+					<th>Process</th>
+					<th>Ticket No</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr *ngFor="let log of logs">
+					<td>{{ log.eventName }}</td>
+					<td>{{ log.userName }}</td>
+					<td>
+						<span
+						class="badge text-white"
+						[ngClass]="{
+						  'bg-primary': log.process === 'added',
+						  'bg-success': log.process === 'bought'
+						}"
+					  >
+						{{ log.process }}
+					  </span>
+					</td>
+					<td>{{ log.ticketNo }}</td>
+				  </tr>
+				</tbody>
+			  </table>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+  

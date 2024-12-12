@@ -34,10 +34,10 @@ export class CustomerLoginComponent {
         next: (response) => {
           if (response.status && response.token) {
             // Store the token
-            this.authService.setToken(response.token, 'CUSTOMER', response.name);
+            this.authService.setToken(response.token, 'CUSTOMER', response.name, response.id);
             
             // Navigate to dashboard
-            this.router.navigate(['/customer/home']);
+            this.router.navigate(['/customer/ticketpool']);
           } else {
             // Handle login failure
             this.errorMessage = 'Login failed. ' + response.message;

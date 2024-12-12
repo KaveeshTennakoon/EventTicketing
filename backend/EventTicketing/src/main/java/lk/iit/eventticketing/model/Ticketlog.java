@@ -18,15 +18,18 @@ public class Ticketlog {
     private String eventName;
     @Column(nullable = false)
     private Long eventId;
+    @Column(nullable = false)
+    private int ticketNo;
 
     public Ticketlog() {}
 
-    public Ticketlog( String process, String userName, Long userId, String eventName, Long eventId) {
+    public Ticketlog( String process, String userName, Long userId, String eventName, Long eventId, int ticketNo) {
         this.process = process;
         this.userName = userName;
         this.userId = userId;
         this.eventName = eventName;
         this.eventId = eventId;
+        this.ticketNo = ticketNo;
     }
 
     public Long getTicketlogId() {
@@ -75,6 +78,14 @@ public class Ticketlog {
 
     public void setEventId(Long eventId) {
         this.eventId = eventId;
+    }
+
+    public int getTicketNo() {
+        return ticketNo;
+    }
+
+    public void setTicketNo(int ticketNo) {
+        this.ticketNo = ticketNo;
     }
 
     @Override

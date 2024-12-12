@@ -15,5 +15,11 @@ public interface TicketpoolService {
 
     boolean startTicketAddition(TicketlogDto ticketlogDto) throws Exception;
 
-    boolean stopTicketAddition(Long ticketPoolId);
+    boolean stopTicketAddition(Long ticketPoolId, Long userId) throws Exception;
+
+    boolean buyTicketFromPool(TicketlogDto ticketlogDto) throws Exception;
+
+    boolean startTicketBuy(TicketlogDto ticketlogDto) throws Exception;
+
+    boolean stopTicketBuy(Long ticketPoolId, Long userId) throws Exception;
 }

@@ -26,6 +26,10 @@ public class Ticketpool {
     private double customerRetrievalRate;
     @Column(nullable = false)
     private int ticketsAvailable = 0;
+    @Column(nullable = false)
+    private int ticketAdd = 0;
+    @Column(nullable = false)
+    private int ticketBuy = 0;
     @JoinColumn(nullable = false)
     private String vendorName;
 
@@ -120,6 +124,26 @@ public class Ticketpool {
     }
 
     public void setVendorName(Vendor vendor) {
+        this.vendorName = vendorName;
+    }
+
+    public int getTicketAdd() {
+        return ticketAdd;
+    }
+
+    public void setTicketAdd(int ticketAdd) {
+        this.ticketAdd = ticketAdd;
+    }
+
+    public int getTicketBuy() {
+        return ticketBuy;
+    }
+
+    public void setTicketBuy(int ticketBuy) {
+        this.ticketBuy = ticketBuy;
+    }
+
+    public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
     }
 

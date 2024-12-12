@@ -43,21 +43,64 @@ public class TicketpoolController {
         }
     }
 
-    @PostMapping("/start-ticket-addition")
-    public ResponseEntity<?> startTicketAddition(@RequestBody TicketlogDto ticketlogDto) {
+
+    @PostMapping("/start-ticket-addition/{ticketpoolId}/{userId}")
+    public ResponseEntity<?> startTicketAddition(@PathVariable Long ticketpoolId, @PathVariable Long userId, @RequestBody TicketlogDto ticketlogDto) {
         try {
+            ticketlogDto.setEventId(ticketpoolId);
+            ticketlogDto.setUserId(userId);
             boolean started = ticketpoolService.startTicketAddition(ticketlogDto);
-            return ResponseEntity.ok().body(Map.of("message", "Ticket addition started successfully"));
+            if (started) {
+                return ResponseEntity.ok().body(Map.of("message", "Ticket addition started successfully"));
+            } else {
+                return ResponseEntity.status(400).body(Map.of("error", "Failed to start ticket addition"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/stop-ticket-addition/{ticketPoolId}/{userId}")
+    public ResponseEntity<?> stopTicketAddition(@PathVariable Long ticketPoolId, @PathVariable Long userId) {
+        try {
+            boolean stopped = ticketpoolService.stopTicketAddition(ticketPoolId, userId);
+            return ResponseEntity.ok().body(Map.of("message", "Ticket addition stopped successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
-    @PostMapping("/stop-ticket-addition/{ticketPoolId}")
-    public ResponseEntity<?> stopTicketAddition(@PathVariable Long ticketPoolId) {
+    @PostMapping(path = "buytickets")
+    public ResponseEntity<?> buyTicketFromPool(@RequestBody TicketlogDto ticketlogDto){
         try {
-            boolean stopped = ticketpoolService.stopTicketAddition(ticketPoolId);
-            return ResponseEntity.ok().body(Map.of("message", "Ticket addition stopped successfully"));
+            boolean buy = ticketpoolService.buyTicketFromPool(ticketlogDto);
+            return ResponseEntity.ok().body(Map.of("message", "Ticket bought successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/start-ticket-buy/{ticketpoolId}/{userId}")
+    public ResponseEntity<?> startTicketBuy(@PathVariable Long ticketpoolId, @PathVariable Long userId, @RequestBody TicketlogDto ticketlogDto) {
+        try {
+            ticketlogDto.setEventId(ticketpoolId);
+            ticketlogDto.setUserId(userId);
+            boolean started = ticketpoolService.startTicketBuy(ticketlogDto);
+            if (started) {
+                return ResponseEntity.ok().body(Map.of("message", "Ticket buying started successfully"));
+            } else {
+                return ResponseEntity.status(400).body(Map.of("error", "Failed to start ticket buying"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/stop-ticket-buy/{ticketPoolId}/{userId}")
+    public ResponseEntity<?> stopTicketBuy(@PathVariable Long ticketPoolId, @PathVariable Long userId) {
+        try {
+            boolean stopped = ticketpoolService.stopTicketBuy(ticketPoolId, userId);
+            return ResponseEntity.ok().body(Map.of("message", "Ticket buying stopped successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
