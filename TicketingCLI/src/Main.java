@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.io.FileWriter;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
 import com.google.gson.Gson;
@@ -16,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-        configureLogger();
+        configureLogger();  // creates the log file
 
         Scanner scanner = new Scanner(System.in);
 
@@ -24,11 +23,16 @@ public class Main {
 
         System.out.println("\nWelcome to the Real-Time Ticketing System CLI!\n");
 
-        // configuration parameters
         config.setTotalTickets(validateConfig("Total Number of Tickets: "));
         config.setTicketReleaseRate(validateConfig("Ticket Release Rate (s): "));
         config.setCustomerRetrievalRate(validateConfig("Customer Retrieval Rate (s): "));
+
         boolean valid = false;
+        /*
+        * TotalTickets is the total number of tickets that the event have.
+        * MaxTicketCapacity is the number of tickets out of total ticket that the pool can handle
+        * MaxTicketCapacity is acceptable when it is less than or equal to TotalTickets
+         */
         while (!valid) {
             config.setMaxTicketCapacity(validateConfig("Maximum Ticket Capacity: "));
             if (config.getMaxTicketCapacity() > config.getTotalTickets()) {
@@ -39,8 +43,7 @@ public class Main {
             }
         }
 
-        saveConfig(config);
-        Thread.currentThread().sleep(50);
+        saveConfig(config); // creates and write data to the json file
 
         int numVendors = validateConfig("Enter number of vendors you want in system: ");
         int numCustomers = validateConfig("Enter number of customers you want in system: ");
@@ -68,7 +71,7 @@ public class Main {
             switch (choice) {
                 case 1:
                     if (!ticketingRunning) {
-                        logger.info("Ticketing process initiated.");
+                        System.out.println("\nTicketing process initiated\n");
                         ticketingRunning = true;
 
                         // Start vendor threads
@@ -85,13 +88,13 @@ public class Main {
                             customerThreads[i].start();
                         }
                     } else {
-                        logger.warning("Attempted to start ticketing while already running.");
+                        System.out.println("\nAttempted to start ticketing while already running\n");
                     }
                     break;
 
                 case 2:
                     if (ticketingRunning) {
-                        logger.info("Ticketing process stopped.");
+                        System.out.println("\nTicketing process stopped\n");
                         ticketingRunning = false;
 
                         // Interrupt all threads
@@ -102,18 +105,17 @@ public class Main {
                             if (thread != null) thread.interrupt();
                         }
                     } else {
-                        logger.warning("Attempted to stop ticketing while it was not running.");
+                        System.out.println("\nAttempted to stop ticketing while it was not running");
                     }
                     break;
 
                 case 3:
                     System.out.println(ticketPool.toString());
-                    logger.fine("Displayed ticket pool status.");
                     break;
 
                 case 4:
                     System.out.println("\nExiting...");
-                    logger.info("Application exited by user.");
+                    System.out.println("Application exited by user.");
                     running = false;
                     ticketingRunning = false;
 
@@ -127,7 +129,7 @@ public class Main {
                     break;
 
                 default:
-                    logger.warning("Invalid menu choice entered.");
+                    System.out.println("Invalid menu choice entered");
             }
         }
 
@@ -137,18 +139,26 @@ public class Main {
 
 
 
-    // creating a json file to save the configuration information
+    /*
+    * json file configuration is created in the files directory
+    * Uses FileWriter to create it
+    * Instances variables in Configuration class is written to the json file
+     */
     private static void saveConfig(Configuration config) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter("files/configuration.json")) {
             gson.toJson(config, writer);
-            logger.info("Configuration saved to configuration.json.");
+            System.out.println("\nConfiguration saved to configuration.json\n");
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to save configuration: " + e.getMessage());
+            System.out.println("\nFailed to save configuration: " + e.getMessage() +"\n");
         }
 
     }
 
+    /*
+    * method to validate inputs
+    * Make sure the inputs are not string and not negative or zero
+     */
     private static int validateConfig(String message) {
         Scanner scanner = new Scanner(System.in);
         int value;
@@ -159,19 +169,24 @@ public class Main {
                 if (value > 0) {
                     break;
                 } else {
-                    System.out.println("Invalid input. Please enter a number greater than 0.");
+                    System.out.println("Invalid input. Please enter a number greater than 0");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
+                System.out.println("Invalid input. Please enter a valid integer");
                 scanner.nextLine();
             }
         }
         return value;
     }
 
+    /*
+    * Creates a log file in files directory called application
+    * Use SimpleFormatter to make the file pretty
+    *
+     */
     private static void configureLogger() {
         try {
-            FileHandler fileHandler = new FileHandler("files/application.log", true);
+            FileHandler fileHandler = new FileHandler("files/application.log", false);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(fileHandler);
         } catch (IOException e) {
